@@ -6,6 +6,7 @@ import { PostTag } from "./PostTag";
 export interface TagI {
   id?: number
   tagName: string
+  detail: string
 }
 
 @Table({
@@ -23,6 +24,11 @@ export class Tag extends Model implements TagI {
   @NotEmpty
   @Column
   tagName!: string
+
+  @AllowNull(false)
+  @NotEmpty
+  @Column
+  detail!: string
 
   @BelongsToMany(() => Post, () => PostTag)
   postTags!: PostTag[];
