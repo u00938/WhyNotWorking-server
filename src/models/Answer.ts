@@ -1,4 +1,4 @@
-import { AllowNull, AutoIncrement, BelongsTo, Column, DataType, ForeignKey, Model, NotEmpty, PrimaryKey, Table } from "sequelize-typescript"
+import { AllowNull, AutoIncrement, BelongsTo, Column, DataType, Default, ForeignKey, Model, NotEmpty, PrimaryKey, Table } from "sequelize-typescript"
 
 import { User } from "./User";
 import { Post } from "./Post";
@@ -40,13 +40,13 @@ export class Answer extends Model implements AnswerI {
   @Column(DataType.TEXT)
   body!: string
 
-  @AllowNull(false)
-  @NotEmpty
+  @Default(0)
+  @AllowNull(true)
   @Column
   votes!: number
 
-  @AllowNull(false)
-  @NotEmpty
+  @Default(false)
+  @AllowNull(true)
   @Column
   choose!: boolean
 
