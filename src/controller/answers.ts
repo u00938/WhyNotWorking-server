@@ -1,5 +1,4 @@
 import { Request, Response } from "express"
-import * as sequelize from "sequelize"
 import { Answer } from "../models/Answer"
 
 export const controller = {
