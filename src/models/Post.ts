@@ -1,4 +1,4 @@
-import { AllowNull, AutoIncrement, BelongsTo, BelongsToMany, Column, DataType, Default, ForeignKey, Model, NotEmpty, PrimaryKey, Table } from "sequelize-typescript"
+import { AllowNull, AutoIncrement, BelongsTo, BelongsToMany, Column, DataType, Default, ForeignKey, HasMany, Model, NotEmpty, PrimaryKey, Table } from "sequelize-typescript"
 
 import { User } from "./User";
 import { Tag } from "./Tag";
@@ -54,6 +54,9 @@ export class Post extends Model implements PostI {
 
   @BelongsTo(() => User) 
   user!: User;
+
+  @HasMany(() => PostTag)
+  postTag!: PostTag[]
 
   @BelongsToMany(() => Tag, () => PostTag)
   postTags!: PostTag[];
