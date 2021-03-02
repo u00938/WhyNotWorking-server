@@ -32,7 +32,6 @@ export class User extends Model implements UserI {
   @Column
   email!: string
 
-  @AllowNull(false)
   @NotEmpty
   @Column
   image!: string
