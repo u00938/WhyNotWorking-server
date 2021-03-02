@@ -6,19 +6,27 @@ import jwt from "jsonwebtoken";
 export const controller = {
   get: async (req: Request, res: Response) => {
     try {
-      const data = await User.findAll({ attributes: ["id", "nickname", "email", "image"] })
-      res.status(200).json({ data: data, message: "ok" });
-    } catch (err) {
-      console.log(err.message);
-    }
-  },
-  getById: async (req: Request, res: Response) => {
-    try {
-      const data = await User.findOne({ 
-        attributes: ["id", "nickname", "email", "image"],
-        where: { id: req.params.id }
-      })
-      res.status(200).json({ data: data, message: "ok" });
+      if(req.query.page) {
+        let pageNum: any = req.query.page;
+        let offset: number = 0;
+        if(pageNum > 1) {
+          offset = 2 * (pageNum - 1);
+        }
+        const data = await User.findAll({
+          attributes: ["id", "nickname", "email", "image"],
+          offset,
+          limit: 2
+        })
+        res.status(200).json({ data: data, message: "ok" });
+      } else if(req.query.user_id) {
+        const data = await User.findOne({ 
+          attributes: ["id", "nickname", "email", "image"],
+          where: { id: req.query.user_id }
+        })
+        res.status(200).json({ data: data, message: "ok" });
+      } else {
+        res.status(400).json({ data: null, message: "Please check again" });
+      }
     } catch (err) {
       console.log(err.message);
     }
