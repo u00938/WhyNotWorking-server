@@ -1,6 +1,4 @@
 import { Request, Response } from "express"
-import * as sequelize from "sequelize"
-import { Post } from "../models/Post";
 import { PostTag } from "../models/PostTag"
 
 export const controller = {

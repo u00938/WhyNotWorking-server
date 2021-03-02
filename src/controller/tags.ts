@@ -27,19 +27,36 @@ export const controller = {
           }]
         });
         res.status(200).json({ data: data, message: "ok" });
-      } else {
+      } else if(req.query.page) {
+        let pageNum: any = req.query.page;
+        let offset: number = 0;
+        if(pageNum > 1) {
+          offset = 36 * (pageNum - 1);
+        }
         const data = await Tag.findAll({
           attributes: ["id", "tagName", "detail", [Sequelize.fn("COUNT","postTags"), "postCount"]],
           include: [{
             model: PostTag,
             attributes: []
           }],
-          group: ["Tag.id"]
+          group: ["Tag.id"],
+          offset,
+          limit: 36
         });
         res.status(200).json({ data: data, message: "ok" });
       }
     } catch (err) {
       console.log(err.message)
+    }
+  },
+  getCount: async (req: Request, res: Response) => {
+    try {
+      const data = await Tag.findAll({
+        attributes: [[Sequelize.fn("COUNT", Sequelize.col("id")), "count"]]
+      })
+      res.status(200).json({ data: data, message: "ok" });   
+    } catch (err) {
+      console.log(err.message);
     }
   },
   post: async (req: Request, res: Response) => {
