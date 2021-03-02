@@ -1,7 +1,8 @@
-import { AllowNull, AutoIncrement, Column, HasMany, Model, NotEmpty, PrimaryKey, Table } from "sequelize-typescript"
+import { AllowNull, AutoIncrement, Column, DataType, HasMany, Model, NotEmpty, PrimaryKey, Table } from "sequelize-typescript"
 
 import { Post } from "./Post";
 import { Answer } from "./Answer";
+import { text } from "body-parser";
 
 export interface UserI {
   id?: number
@@ -32,9 +33,14 @@ export class User extends Model implements UserI {
   @Column
   email!: string
 
-  @NotEmpty
   @Column
   image!: string
+
+  @Column(DataType.TEXT)
+  aboutMe!: string
+
+  @Column
+  location!: string
 
   @AllowNull(false)
   @NotEmpty
