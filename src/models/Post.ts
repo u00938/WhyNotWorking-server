@@ -3,6 +3,7 @@ import { AllowNull, AutoIncrement, BelongsTo, BelongsToMany, Column, DataType, D
 import { User } from "./User";
 import { Tag } from "./Tag";
 import { PostTag } from "./PostTag";
+import { Answer } from "./Answer";
 
 export interface PostI {
   id?: number
@@ -57,6 +58,9 @@ export class Post extends Model implements PostI {
 
   @HasMany(() => PostTag)
   postTag!: PostTag[]
+
+  @HasMany(() => Answer)
+  answers!: Answer[];
 
   @BelongsToMany(() => Tag, () => PostTag)
   postTags!: PostTag[];
