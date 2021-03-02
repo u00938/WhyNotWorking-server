@@ -3,6 +3,7 @@ import { Sequelize } from "sequelize"
 import { Tag } from "../models/Tag"
 import { PostTag } from "../models/PostTag";
 import { Post } from "../models/Post";
+import { postTags } from "../routes/postTags";
 
 export const controller = {
   get: async (req: Request, res: Response) => {
@@ -34,10 +35,12 @@ export const controller = {
           offset = 36 * (pageNum - 1);
         }
         const data = await Tag.findAll({
-          attributes: ["id", "tagName", "detail", [Sequelize.fn("COUNT","postTags"), "postCount"]],
+          attributes: ["id", "tagName", "detail", [Sequelize.fn("COUNT", "postTag.id"), "postCount"]],
           include: [{
             model: PostTag,
-            attributes: []
+            as: "postTag",
+            attributes: [],
+            duplicating: false
           }],
           group: ["Tag.id"],
           offset,
