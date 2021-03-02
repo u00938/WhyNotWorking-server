@@ -11,12 +11,12 @@ export const controller = {
         let pageNum: any = req.query.page;
         let offset: number = 0;
         if(pageNum > 1) {
-          offset = 15 * (pageNum - 1);
+          offset = 36 * (pageNum - 1);
         }
         const data = await User.findAll({
           attributes: ["id", "nickname", "email", "image", "location"],
           offset,
-          limit: 15
+          limit: 36
         })
         res.status(200).json({ data: data, message: "ok" });
       } else if(req.query.user_id) {
