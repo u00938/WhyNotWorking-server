@@ -1,5 +1,4 @@
 import { Request, Response } from "express"
-import * as sequelize from "sequelize"
 import { Post } from "../models/Post"
 import { Tag } from "../models/Tag";
 import { PostTag } from "../models/PostTag";
@@ -10,6 +9,34 @@ export const controller = {
   get: async (req: Request, res: Response) => {
     try {
       const query = req.query;
+      if(query.page) {
+        let pageNum: any = query.page;
+        let offset: number = 0;
+        if(pageNum > 1) {
+          offset = 15 * (pageNum - 1);
+        }
+        const postByPage = await Post.findAll({
+          include: [
+            { model: User, attributes: ["nickname", "image"] },
+            { model: PostTag, attributes: ["tagId"], 
+              include: [{
+                model: Tag,
+                attributes: ["tagName"]
+              }]
+            },
+            { model: Answer, 
+              attributes: ["body", "votes", "choose"], 
+              include: [{ 
+                model: User, 
+                attributes: ["nickname", "image"] 
+              }] 
+            },
+          ],
+          offset,
+          limit: 15
+        })
+        res.status(200).json({ data: postByPage, message: "ok" });
+      }
       if (query.user_id) {
         const postByUser = await Post.findAll({
           include: [
