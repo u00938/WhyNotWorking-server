@@ -1,9 +1,10 @@
 import { Router } from "express"
 import { controller } from "../controller/tags"
+import { tokenChecker } from "../middleware/token"
 
 export const tags = Router()
 
-tags.get('/', controller.get)
-tags.get('/count', controller.getCount)
-tags.post('/', controller.post)
-tags.delete('/', controller.delete)
+tags.get('/', tokenChecker, controller.get)
+tags.get('/count', tokenChecker, controller.getCount)
+tags.post('/', tokenChecker, controller.post)
+tags.delete('/', tokenChecker, controller.delete)
