@@ -42,7 +42,7 @@ export class User extends Model implements UserI {
   @Column
   location!: string
 
-  @AllowNull(false)
+  @AllowNull(true)
   @NotEmpty
   @Column
   password!: string

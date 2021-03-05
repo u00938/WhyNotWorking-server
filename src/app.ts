@@ -16,7 +16,7 @@ import { users } from "./routes/users";
 
 dotenv.config();
 
-const port = process.env.PORT || 4000;
+const port = process.env.SERVER_PORT || 4000;
 
 const app: Application = express();
 
