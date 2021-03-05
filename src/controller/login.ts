@@ -20,8 +20,13 @@ export const controller = {
       if (!isSame) {
         res.status(400).json({ data: null, message: "password don't match" })
       } else {
+        const payload = {
+          id: userInfo?.id,
+          email: userInfo?.email,
+          nickname: userInfo?.nickname
+        }
         jwt.sign(
-          { userInfo }, 
+          payload, 
           process.env.ACCESS_SECRET!, 
           { expiresIn: "1d" }
           , (err, token) => {
