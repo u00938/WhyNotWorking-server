@@ -2,6 +2,8 @@ import { Request, Response } from "express"
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { User } from "../models/User"
+import { OAuth2Client, TokenPayload } from "google-auth-library";
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 export const controller = {
   post: async (req: Request, res: Response) => {
@@ -50,5 +52,50 @@ export const controller = {
     } catch (err) {
       console.log(err.message);
     }
-  }
+  },
+  googleLogin: (req: Request, res: Response) => {
+    let token = req.body.token;
+    console.log(token);
+    let userInfo:any = {};
+    async function verify() {
+      const ticket = await client.verifyIdToken({
+        idToken: token,
+        audience: process.env.GOOGLE_CLIENT_ID,
+      });
+      const payload: any = ticket.getPayload();
+      userInfo.nickname = payload.name;
+      userInfo.email = payload.email;
+      userInfo.image = payload.picture;
+    }
+    verify()
+      .then(async () => {
+        const { nickname, email, image } = userInfo;
+        const [result, created] = await User.findOrCreate({
+          where: { email, nickname },
+          defaults: { nickname, email, image },
+        });
+        interface Options {
+          // domain?: string,
+          path: string;
+          httpOnly: boolean;
+          secure: boolean;
+          sameSite: string;
+          maxAge: number;
+          overwrite: boolean;
+        }
+        const options: any = {
+          //domain: "localhost",
+          path: "/",
+          httpOnly: true,
+          //secure: true,
+          //sameSite: "none",
+          maxAge: 1000 * 60 * 60 * 24,
+          overwrite: true,
+        } as Options
+        res.cookie("googleOauthToken", token, options);
+        console.log(result)
+        res.status(200).json({ data: result, message: "ok" });
+      })
+      .catch(console.error);
+  },
 }

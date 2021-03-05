@@ -3,6 +3,8 @@ import { User } from "../models/User"
 import bcrypt from "bcrypt";
 import Sequelize from "sequelize";
 import jwt from "jsonwebtoken";
+import { OAuth2Client } from "google-auth-library";
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 export const controller = {
   get: async (req: Request, res: Response) => {
@@ -26,14 +28,30 @@ export const controller = {
         })
         res.status(200).json({ data: data, message: "ok" });
       } else {
-        const token = req.cookies.accessToken;
-        jwt.verify(token, process.env.ACCESS_SECRET!, async (error: any, result: any) => {
-          const data = await User.findOne({ 
-            attributes: ["id", "nickname", "email", "image", "aboutMe", "location"],
-            where: { id: result.userInfo.id }
+        if(req.cookies.accessToken) {
+          const token: any = req.cookies.accessToken;
+          jwt.verify(token, process.env.ACCESS_SECRET!, async (error: any, result: any) => {
+            const data = await User.findOne({ 
+              attributes: ["id", "nickname", "email", "image", "aboutMe", "location"],
+              where: { id: result.userInfo.id }
+            })
+            res.status(200).json({ data: data, message: "ok" });          
           })
-          res.status(200).json({ data: data, message: "ok" });          
-        })
+        } else if(req.cookies.googleOauthToken) {
+          const token: any = req.cookies.googleOauthToken;
+          const ticket = await client.verifyIdToken({
+            idToken: token,
+            audience: process.env.GOOGLE_CLIENT_ID
+          });
+          const payload: any = ticket.getPayload();
+          const myInfo = await User.findOne({
+            where: { nickname: payload.name },
+            attributes: { exclude: ["password"] }
+          });
+          if(myInfo) {
+            res.status(200).json({ data: myInfo, message: "ok" });
+          }
+        }
         }
       } catch (err) {
       console.log(err.message);
