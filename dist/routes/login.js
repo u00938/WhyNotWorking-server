@@ -6,4 +6,5 @@ const login_1 = require("../controller/login");
 exports.login = express_1.Router();
 exports.login.post('/', login_1.controller.post);
 exports.login.post('/googleLogin', login_1.controller.googleLogin);
+exports.login.post('/githubLogin', login_1.controller.githubLogin);
 //# sourceMappingURL=login.js.map

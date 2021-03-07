@@ -16,6 +16,7 @@ exports.controller = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const User_1 = require("../models/User");
+const axios_1 = __importDefault(require("axios"));
 const google_auth_library_1 = require("google-auth-library");
 const client = new google_auth_library_1.OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 exports.controller = {
@@ -98,5 +99,25 @@ exports.controller = {
         }))
             .catch(console.error);
     },
+    githubLogin: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const client_id = process.env.GITHUB_CLIENT_ID;
+            const client_secret = process.env.GITHUB_CLIENT_SECRET;
+            const url = 'https://github.com/login/oauth/access_token';
+            const code = req.body.authorizationCode;
+            if (code) {
+                yield axios_1.default.post(url, { client_id, client_secret, code }, { headers: { accept: "application/json" } })
+                    .then((result) => {
+                    res.status(200).json({ accessToken: result.data.access_token });
+                });
+            }
+            else {
+                res.status(400).json({ data: null, message: "should send authorization code" });
+            }
+        }
+        catch (err) {
+            console.log(err.message);
+        }
+    }),
 };
 //# sourceMappingURL=login.js.map
