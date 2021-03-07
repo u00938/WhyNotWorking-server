@@ -8,8 +8,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.controller = void 0;
+const sequelize_1 = __importDefault(require("sequelize"));
 const Post_1 = require("../models/Post");
 const Tag_1 = require("../models/Tag");
 const PostTag_1 = require("../models/PostTag");
@@ -91,6 +95,17 @@ exports.controller = {
                 });
                 res.status(200).json({ data: postById, message: "ok" });
             }
+        }
+        catch (err) {
+            console.log(err.message);
+        }
+    }),
+    getCount: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const data = yield Post_1.Post.findAll({
+                attributes: [[sequelize_1.default.fn("COUNT", sequelize_1.default.col("id")), "count"]]
+            });
+            res.status(200).json({ data: data, message: "ok" });
         }
         catch (err) {
             console.log(err.message);

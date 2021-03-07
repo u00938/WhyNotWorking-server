@@ -34,7 +34,12 @@ exports.controller = {
                 res.status(400).json({ data: null, message: "password don't match" });
             }
             else {
-                jsonwebtoken_1.default.sign({ userInfo }, process.env.ACCESS_SECRET, { expiresIn: "1d" }, (err, token) => {
+                const payload = {
+                    id: userInfo === null || userInfo === void 0 ? void 0 : userInfo.id,
+                    email: userInfo === null || userInfo === void 0 ? void 0 : userInfo.email,
+                    nickname: userInfo === null || userInfo === void 0 ? void 0 : userInfo.nickname
+                };
+                jsonwebtoken_1.default.sign(payload, process.env.ACCESS_SECRET, { expiresIn: "1d" }, (err, token) => {
                     if (err)
                         res.status(404).json({ data: null, message: err.message });
                     const options = {

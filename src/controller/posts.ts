@@ -1,5 +1,6 @@
-import { Request, Response } from "express"
-import { Post } from "../models/Post"
+import { Request, Response } from "express";
+import Sequelize from "sequelize";
+import { Post } from "../models/Post";
 import { Tag } from "../models/Tag";
 import { PostTag } from "../models/PostTag";
 import { Answer } from "../models/Answer";
@@ -81,6 +82,16 @@ export const controller = {
         })
         res.status(200).json({ data: postById, message: "ok" })
       }
+    } catch (err) {
+      console.log(err.message);
+    }
+  },
+  getCount: async (req: Request, res: Response) => {
+    try {
+      const data = await Post.findAll({
+        attributes: [[Sequelize.fn("COUNT", Sequelize.col("id")), "count"]]
+      })
+      res.status(200).json({ data: data, message: "ok" });   
     } catch (err) {
       console.log(err.message);
     }
