@@ -122,7 +122,7 @@ export const controller = {
               } else {
                 await User.update(
                   { nickname, password: $password, image, aboutMe, location },
-                  { where: { id: result.userInfo.id } }
+                  { where: { id: result.id } }
                 );
                 res.status(200).json({ data: null, message: "ok" });
               }
@@ -130,7 +130,7 @@ export const controller = {
             // nickname이 안들어올 경우
             await User.update(
               { password: $password, image, aboutMe, location },
-              { where: { id: result.userInfo.id } }
+              { where: { id: result.id } }
             );
             res.status(200).json({ data: null, message: "ok" });
         } 
@@ -145,14 +145,14 @@ export const controller = {
               // nickname이 안들어올 경우
               await User.update(
                 { nickname, image, aboutMe, location },
-                { where: { id : result.userInfo.id } }
+                { where: { id : result.id } }
               );
               res.status(200).json({ data: null, message: "ok" })
             }
           } else {
             await User.update(
               { image, aboutMe, location },
-              { where: { id : result.userInfo.id } }
+              { where: { id : result.id } }
             );
             res.status(200).json({ data: null, message: "ok" })
           }
