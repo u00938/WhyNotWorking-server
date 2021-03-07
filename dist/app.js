@@ -19,6 +19,7 @@ const cors_1 = __importDefault(require("cors"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const database_1 = require("./database/database");
+const helmet_1 = __importDefault(require("helmet"));
 const answers_1 = require("./routes/answers");
 const login_1 = require("./routes/login");
 const logout_1 = require("./routes/logout");
@@ -33,6 +34,7 @@ const app = express_1.default();
 app.use(morgan_1.default("dev"));
 app.use(cookie_parser_1.default());
 app.use(body_parser_1.json());
+app.use(helmet_1.default());
 app.use(cors_1.default({
     origin: true,
     methods: "GET, POST, PATCH, DELETE, OPTIONS",
