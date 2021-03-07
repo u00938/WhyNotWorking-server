@@ -5,6 +5,7 @@ import { tokenChecker } from "../middleware/token"
 export const posts = Router()
 
 posts.get('/', tokenChecker, controller.get)
+posts.get('/count', tokenChecker, controller.getCount)
 posts.post('/', tokenChecker, controller.post)
 posts.patch('/', tokenChecker, controller.patch)
 posts.delete('/', tokenChecker, controller.delete)
