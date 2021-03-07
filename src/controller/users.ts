@@ -43,7 +43,7 @@ export const controller = {
                 model: Tag,
                 through: { attributes: [] }
               }],
-              where: { id: result.userInfo.id }
+              where: { id: result.id }
             })
             res.status(200).json({ data: data, message: "ok" });          
           })
