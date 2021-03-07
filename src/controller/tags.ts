@@ -64,9 +64,9 @@ export const controller = {
   },
   post: async (req: Request, res: Response) => {
     try {
-      const { tagName, detail } = req.body;
-      if(!tagName || !detail) {
-        res.status(400).json({ data: null, message: "should send full data" })
+      const { tagName } = req.body;
+      if(!tagName) {
+        res.status(400).json({ data: null, message: "should send tagName" })
       } else {
         const [result, created] = await Tag.findOrCreate({
           where: { tagName },

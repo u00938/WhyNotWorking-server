@@ -10,16 +10,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.controller = void 0;
-const PostTag_1 = require("../models/PostTag");
+const UserTag_1 = require("../models/UserTag");
 exports.controller = {
     post: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const { postId, tagId } = req.body;
-            if (!postId || !tagId) {
+            const { userId, tagId } = req.body;
+            if (!userId || !tagId) {
                 res.status(400).json({ data: null, message: "should send full data" });
             }
             else {
-                const [result, created] = yield PostTag_1.PostTag.findOrCreate({
+                const [result, created] = yield UserTag_1.UserTag.findOrCreate({
                     where: req.body,
                     defaults: req.body
                 });
@@ -37,12 +37,12 @@ exports.controller = {
     }),
     delete: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const { postId, tagId } = req.body;
-            if (!postId || !tagId) {
+            const { userId, tagId } = req.body;
+            if (!userId || !tagId) {
                 res.status(400).json({ data: null, message: "should send full data" });
             }
             else {
-                yield PostTag_1.PostTag.destroy({ where: { postId, tagId } });
+                yield UserTag_1.UserTag.destroy({ where: { userId, tagId } });
                 res.status(200).json({ data: null, message: "delete success" });
             }
         }
@@ -51,4 +51,4 @@ exports.controller = {
         }
     })
 };
-//# sourceMappingURL=postTags.js.map
+//# sourceMappingURL=userTags.js.map

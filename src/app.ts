@@ -13,6 +13,7 @@ import { posts } from "./routes/posts";
 import { postTags } from "./routes/postTags";
 import { tags } from "./routes/tags";
 import { users } from "./routes/users";
+import { userTags } from "./routes/userTags";
 
 dotenv.config();
 
@@ -39,6 +40,7 @@ app.use("/posts", posts);
 app.use("/postTags", postTags);
 app.use("/tags", tags);
 app.use("/users", users);
+app.use("/userTags", userTags);
 
 app.listen(port, () => { 
   console.log("Hello")

@@ -13,6 +13,8 @@ exports.User = void 0;
 const sequelize_typescript_1 = require("sequelize-typescript");
 const Post_1 = require("./Post");
 const Answer_1 = require("./Answer");
+const Tag_1 = require("./Tag");
+const UserTag_1 = require("./UserTag");
 let User = class User extends sequelize_typescript_1.Model {
 };
 __decorate([
@@ -59,6 +61,14 @@ __decorate([
     sequelize_typescript_1.HasMany(() => Answer_1.Answer),
     __metadata("design:type", Array)
 ], User.prototype, "answers", void 0);
+__decorate([
+    sequelize_typescript_1.HasMany(() => UserTag_1.UserTag),
+    __metadata("design:type", Array)
+], User.prototype, "userTag", void 0);
+__decorate([
+    sequelize_typescript_1.BelongsToMany(() => Tag_1.Tag, () => UserTag_1.UserTag),
+    __metadata("design:type", Array)
+], User.prototype, "userTags", void 0);
 User = __decorate([
     sequelize_typescript_1.Table({
         tableName: "users",

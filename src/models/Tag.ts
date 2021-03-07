@@ -1,7 +1,9 @@
 import { AllowNull, AutoIncrement, BelongsToMany, Column, HasMany, Model, NotEmpty, PrimaryKey, Table } from "sequelize-typescript"
 
 import { Post } from "./Post";
+import { User } from "./User";
 import { PostTag } from "./PostTag";
+import { UserTag } from "./UserTag";
 
 export interface TagI {
   id?: number
@@ -25,7 +27,6 @@ export class Tag extends Model implements TagI {
   @Column
   tagName!: string
 
-  @AllowNull(false)
   @NotEmpty
   @Column
   detail!: string
@@ -33,7 +34,17 @@ export class Tag extends Model implements TagI {
   @HasMany(() => PostTag)
   postTag!: PostTag[]
 
+  @HasMany(() => UserTag)
+  userTag!: UserTag[]
+
   @BelongsToMany(() => Post, () => PostTag)
   postTags!: PostTag[];
+
+  @BelongsToMany(() => User, () => UserTag)
+  userTags!: UserTag[];
+
+
+
+
 
 }

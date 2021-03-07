@@ -11,6 +11,7 @@ const User_1 = require("../models/User");
 const Post_1 = require("../models/Post");
 const Tag_1 = require("../models/Tag");
 const PostTag_1 = require("../models/PostTag");
+const UserTag_1 = require("../models/UserTag");
 const Answer_1 = require("../models/Answer");
 exports.sequelize = new sequelize_typescript_1.Sequelize({
     host: process.env.HOST,
@@ -18,6 +19,6 @@ exports.sequelize = new sequelize_typescript_1.Sequelize({
     password: process.env.PASSWORD,
     database: process.env.DATABASE,
     dialect: "mysql",
-    models: [User_1.User, Post_1.Post, Tag_1.Tag, PostTag_1.PostTag, Answer_1.Answer]
+    models: [User_1.User, Post_1.Post, Tag_1.Tag, PostTag_1.PostTag, UserTag_1.UserTag, Answer_1.Answer]
 });
 //# sourceMappingURL=database.js.map

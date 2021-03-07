@@ -1,7 +1,9 @@
-import { AllowNull, AutoIncrement, Column, DataType, HasMany, Model, NotEmpty, PrimaryKey, Table } from "sequelize-typescript"
+import { AllowNull, AutoIncrement, BelongsToMany, Column, DataType, HasMany, Model, NotEmpty, PrimaryKey, Table } from "sequelize-typescript"
 
 import { Post } from "./Post";
 import { Answer } from "./Answer";
+import { Tag } from "./Tag";
+import { UserTag } from "./UserTag";
 import { text } from "body-parser";
 
 export interface UserI {
@@ -52,4 +54,10 @@ export class User extends Model implements UserI {
 
   @HasMany(() => Answer)
   answers?: Answer[]
+
+  @HasMany(() => UserTag)
+  userTag!: UserTag[]
+
+  @BelongsToMany(() => Tag, () => UserTag)
+  userTags!: UserTag[];
 }
