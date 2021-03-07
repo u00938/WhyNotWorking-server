@@ -46,6 +46,8 @@
     "@types/jsonwebtoken": "^8.5.0",
     "@types/morgan": "^1.9.2",
     "@types/node": "^14.14.31",
+    "axios": "^0.21.1",
+    "cheerio": "^1.0.0-rc.5",
     "sequelize-typescript-migration": "0.0.1-beta.3"
   }
 }
