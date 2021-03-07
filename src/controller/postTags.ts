@@ -14,8 +14,9 @@ export const controller = {
       });
       if(created) {
         res.status(200).json({ data: null, message: "ok" })
+      } else {
+        res.status(400).json({ data:null, message: "Please check again" });
       }
-      res.status(400).json({ data:null, message: "Please check again" })
     }
     } catch (err) {
       console.log(err.message)
