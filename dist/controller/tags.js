@@ -8,12 +8,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.controller = void 0;
 const sequelize_1 = require("sequelize");
 const Tag_1 = require("../models/Tag");
 const PostTag_1 = require("../models/PostTag");
 const Post_1 = require("../models/Post");
+const axios_1 = __importDefault(require("axios"));
+const cheerio_1 = __importDefault(require("cheerio"));
 exports.controller = {
     get: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
@@ -70,6 +75,32 @@ exports.controller = {
                 attributes: [[sequelize_1.Sequelize.fn("COUNT", sequelize_1.Sequelize.col("id")), "count"]]
             });
             res.status(200).json({ data: data, message: "ok" });
+        }
+        catch (err) {
+            console.log(err.message);
+        }
+    }),
+    getTags: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            function getTagData(url) {
+                axios_1.default.get(url).then(res => {
+                    const $ = cheerio_1.default.load(res.data);
+                    const $tagData = $('#mainbar');
+                    Tag_1.Tag.create({
+                        tagName: $tagData.find("h1").text().replace("Questions tagged ", "").replace("[", "").replace("]", ""),
+                        detail: $tagData.find("p").text()
+                    });
+                });
+            }
+            for (let i = 1; i < 7; i++) {
+                axios_1.default.get(`https://stackoverflow.com/tags?page=${i}&tab=popular`).then(res => {
+                    const $ = cheerio_1.default.load(res.data);
+                    const $tagList = $('#tags_list').find('#tags-browser').children('div.s-card');
+                    $tagList.each(function () {
+                        getTagData('https://stackoverflow.com' + $(this).find('a:eq(0)').attr('href'));
+                    });
+                }).catch(err => { console.log(err.message); });
+            }
         }
         catch (err) {
             console.log(err.message);

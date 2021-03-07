@@ -7,6 +7,7 @@ const token_1 = require("../middleware/token");
 exports.tags = express_1.Router();
 exports.tags.get('/', token_1.tokenChecker, tags_1.controller.get);
 exports.tags.get('/count', token_1.tokenChecker, tags_1.controller.getCount);
+exports.tags.get('/getTags', token_1.tokenChecker, tags_1.controller.getTags);
 exports.tags.post('/', token_1.tokenChecker, tags_1.controller.post);
 exports.tags.delete('/', token_1.tokenChecker, tags_1.controller.delete);
 //# sourceMappingURL=tags.js.map
