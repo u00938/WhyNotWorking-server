@@ -141,12 +141,12 @@ exports.controller = {
                             res.status(400).json({ data: null, message: "Such nickname already exists" });
                         }
                         else {
-                            yield User_1.User.update({ nickname, password: $password, image, aboutMe, location }, { where: { id: result.userInfo.id } });
+                            yield User_1.User.update({ nickname, password: $password, image, aboutMe, location }, { where: { id: result.id } });
                             res.status(200).json({ data: null, message: "ok" });
                         }
                     }
                     // nickname이 안들어올 경우
-                    yield User_1.User.update({ password: $password, image, aboutMe, location }, { where: { id: result.userInfo.id } });
+                    yield User_1.User.update({ password: $password, image, aboutMe, location }, { where: { id: result.id } });
                     res.status(200).json({ data: null, message: "ok" });
                 }
                 // password가 없는 경우
@@ -159,12 +159,12 @@ exports.controller = {
                         }
                         else {
                             // nickname이 안들어올 경우
-                            yield User_1.User.update({ nickname, image, aboutMe, location }, { where: { id: result.userInfo.id } });
+                            yield User_1.User.update({ nickname, image, aboutMe, location }, { where: { id: result.id } });
                             res.status(200).json({ data: null, message: "ok" });
                         }
                     }
                     else {
-                        yield User_1.User.update({ image, aboutMe, location }, { where: { id: result.userInfo.id } });
+                        yield User_1.User.update({ image, aboutMe, location }, { where: { id: result.id } });
                         res.status(200).json({ data: null, message: "ok" });
                     }
                 }
