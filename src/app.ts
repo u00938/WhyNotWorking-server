@@ -5,6 +5,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import { sequelize } from "./database/database";
+import helmet from "helmet";
 
 import { answers } from "./routes/answers";
 import { login } from "./routes/login";
@@ -24,6 +25,7 @@ const app: Application = express();
 app.use(logger("dev"));
 app.use(cookieParser());
 app.use(json());
+app.use(helmet());
 
 app.use(
   cors({
