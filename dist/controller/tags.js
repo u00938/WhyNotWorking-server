@@ -77,9 +77,9 @@ exports.controller = {
     }),
     post: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const { tagName, detail } = req.body;
-            if (!tagName || !detail) {
-                res.status(400).json({ data: null, message: "should send full data" });
+            const { tagName } = req.body;
+            if (!tagName) {
+                res.status(400).json({ data: null, message: "should send tagName" });
             }
             else {
                 const [result, created] = yield Tag_1.Tag.findOrCreate({

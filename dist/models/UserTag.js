@@ -9,52 +9,45 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Tag = void 0;
+exports.UserTag = void 0;
 const sequelize_typescript_1 = require("sequelize-typescript");
-const Post_1 = require("./Post");
 const User_1 = require("./User");
-const PostTag_1 = require("./PostTag");
-const UserTag_1 = require("./UserTag");
-let Tag = class Tag extends sequelize_typescript_1.Model {
+const Tag_1 = require("./Tag");
+let UserTag = class UserTag extends sequelize_typescript_1.Model {
 };
 __decorate([
     sequelize_typescript_1.AutoIncrement,
     sequelize_typescript_1.PrimaryKey,
     sequelize_typescript_1.Column,
     __metadata("design:type", Number)
-], Tag.prototype, "id", void 0);
+], UserTag.prototype, "id", void 0);
 __decorate([
+    sequelize_typescript_1.ForeignKey(() => User_1.User),
     sequelize_typescript_1.AllowNull(false),
     sequelize_typescript_1.NotEmpty,
     sequelize_typescript_1.Column,
-    __metadata("design:type", String)
-], Tag.prototype, "tagName", void 0);
+    __metadata("design:type", Number)
+], UserTag.prototype, "userId", void 0);
 __decorate([
+    sequelize_typescript_1.ForeignKey(() => Tag_1.Tag),
+    sequelize_typescript_1.AllowNull(false),
     sequelize_typescript_1.NotEmpty,
     sequelize_typescript_1.Column,
-    __metadata("design:type", String)
-], Tag.prototype, "detail", void 0);
+    __metadata("design:type", Number)
+], UserTag.prototype, "tagId", void 0);
 __decorate([
-    sequelize_typescript_1.HasMany(() => PostTag_1.PostTag),
-    __metadata("design:type", Array)
-], Tag.prototype, "postTag", void 0);
+    sequelize_typescript_1.BelongsTo(() => User_1.User),
+    __metadata("design:type", User_1.User)
+], UserTag.prototype, "users", void 0);
 __decorate([
-    sequelize_typescript_1.HasMany(() => UserTag_1.UserTag),
-    __metadata("design:type", Array)
-], Tag.prototype, "userTag", void 0);
-__decorate([
-    sequelize_typescript_1.BelongsToMany(() => Post_1.Post, () => PostTag_1.PostTag),
-    __metadata("design:type", Array)
-], Tag.prototype, "postTags", void 0);
-__decorate([
-    sequelize_typescript_1.BelongsToMany(() => User_1.User, () => UserTag_1.UserTag),
-    __metadata("design:type", Array)
-], Tag.prototype, "userTags", void 0);
-Tag = __decorate([
+    sequelize_typescript_1.BelongsTo(() => Tag_1.Tag),
+    __metadata("design:type", Tag_1.Tag)
+], UserTag.prototype, "tags", void 0);
+UserTag = __decorate([
     sequelize_typescript_1.Table({
-        tableName: "tags",
+        tableName: "userTags",
         timestamps: true
     })
-], Tag);
-exports.Tag = Tag;
-//# sourceMappingURL=Tag.js.map
+], UserTag);
+exports.UserTag = UserTag;
+//# sourceMappingURL=UserTag.js.map

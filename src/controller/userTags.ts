@@ -1,21 +1,21 @@
 import { Request, Response } from "express"
-import { PostTag } from "../models/PostTag"
+import { UserTag } from "../models/UserTag"
 
 export const controller = {
   post: async (req: Request, res: Response) => {
     try {
-    const { postId, tagId } = req.body;
-    if(!postId || !tagId) {
+    const { userId, tagId } = req.body;
+    if(!userId || !tagId) {
       res.status(400).json({ data: null, message: "should send full data" })
     } else {
-      const [result, created] = await PostTag.findOrCreate({
+      const [result, created] = await UserTag.findOrCreate({
         where: req.body,
         defaults: req.body
       });
       if(created) {
         res.status(200).json({ data: null, message: "ok" })
       } else {
-        res.status(400).json({ data:null, message: "Please check again" });
+      res.status(400).json({ data:null, message: "Please check again" });
       }
     }
     } catch (err) {
@@ -24,11 +24,11 @@ export const controller = {
   },
   delete: async (req: Request, res: Response) => {
     try {
-      const { postId, tagId } = req.body;
-      if(!postId || !tagId) {
+      const { userId, tagId } = req.body;
+      if(!userId || !tagId) {
         res.status(400).json({ data: null, message: "should send full data" })
       } else {
-        await PostTag.destroy({ where: { postId, tagId } });
+        await UserTag.destroy({ where: { userId, tagId } });
         res.status(200).json({ data: null, message: "delete success" });
       }
     } catch (err) {

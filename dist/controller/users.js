@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.controller = void 0;
 const User_1 = require("../models/User");
+const Tag_1 = require("../models/Tag");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const sequelize_1 = __importDefault(require("sequelize"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
@@ -38,6 +39,10 @@ exports.controller = {
             else if (req.query.user_id) {
                 const data = yield User_1.User.findOne({
                     attributes: ["id", "nickname", "email", "image", "aboutMe", "location"],
+                    include: [{
+                            model: Tag_1.Tag,
+                            through: { attributes: [] }
+                        }],
                     where: { id: req.query.user_id }
                 });
                 res.status(200).json({ data: data, message: "ok" });
@@ -48,6 +53,10 @@ exports.controller = {
                     jsonwebtoken_1.default.verify(token, process.env.ACCESS_SECRET, (error, result) => __awaiter(void 0, void 0, void 0, function* () {
                         const data = yield User_1.User.findOne({
                             attributes: ["id", "nickname", "email", "image", "aboutMe", "location"],
+                            include: [{
+                                    model: Tag_1.Tag,
+                                    through: { attributes: [] }
+                                }],
                             where: { id: result.userInfo.id }
                         });
                         res.status(200).json({ data: data, message: "ok" });
@@ -62,7 +71,11 @@ exports.controller = {
                     const payload = ticket.getPayload();
                     const myInfo = yield User_1.User.findOne({
                         where: { nickname: payload.name },
-                        attributes: { exclude: ["password"] }
+                        attributes: { exclude: ["password"] },
+                        include: [{
+                                model: Tag_1.Tag,
+                                through: { attributes: [] }
+                            }]
                     });
                     if (myInfo) {
                         res.status(200).json({ data: myInfo, message: "ok" });

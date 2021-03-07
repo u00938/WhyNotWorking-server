@@ -1,9 +1,11 @@
 import { Request, Response } from "express"
 import { User } from "../models/User"
+import { Tag } from "../models/Tag"
 import bcrypt from "bcrypt";
 import Sequelize from "sequelize";
 import jwt from "jsonwebtoken";
 import { OAuth2Client } from "google-auth-library";
+import { sequelize } from "../database/database";
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 export const controller = {
@@ -24,6 +26,10 @@ export const controller = {
       } else if(req.query.user_id) {
         const data = await User.findOne({
           attributes: ["id", "nickname", "email", "image", "aboutMe", "location"],
+          include: [{
+            model: Tag,
+            through: { attributes: [] }
+          }],
           where: { id: req.query.user_id }
         })
         res.status(200).json({ data: data, message: "ok" });
@@ -33,6 +39,10 @@ export const controller = {
           jwt.verify(token, process.env.ACCESS_SECRET!, async (error: any, result: any) => {
             const data = await User.findOne({ 
               attributes: ["id", "nickname", "email", "image", "aboutMe", "location"],
+              include: [{
+                model: Tag,
+                through: { attributes: [] }
+              }],
               where: { id: result.userInfo.id }
             })
             res.status(200).json({ data: data, message: "ok" });          
@@ -46,7 +56,11 @@ export const controller = {
           const payload: any = ticket.getPayload();
           const myInfo = await User.findOne({
             where: { nickname: payload.name },
-            attributes: { exclude: ["password"] }
+            attributes: { exclude: ["password"] },
+            include: [{
+              model: Tag,
+              through: { attributes: [] }
+            }]
           });
           if(myInfo) {
             res.status(200).json({ data: myInfo, message: "ok" });
