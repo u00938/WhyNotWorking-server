@@ -70,8 +70,8 @@ export const controller = {
             const $ = cheerio.load(res.data);
             const $tagData = $('#mainbar');
               Tag.create({
-                tagName: $tagData.find("h1").text().replace("Questions tagged ", "").replace("[", "").replace("]", "").replace("\n", ""),
-                detail: $tagData.find("p").text().replace("\n", "")
+                tagName: $tagData.find("h1").text().replace("Questions tagged ", "").replace("[", "").replace("]", "").replace("\n", "").replace("        ", ""),
+                detail: $tagData.find("p").text().replace("\n", "").replace("                    ", "")
               })
           })
         }
