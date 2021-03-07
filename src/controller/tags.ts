@@ -3,7 +3,8 @@ import { Sequelize } from "sequelize"
 import { Tag } from "../models/Tag"
 import { PostTag } from "../models/PostTag";
 import { Post } from "../models/Post";
-import { postTags } from "../routes/postTags";
+import axios from "axios";
+import cheerio from "cheerio";
 
 export const controller = {
   get: async (req: Request, res: Response) => {
@@ -58,6 +59,31 @@ export const controller = {
         attributes: [[Sequelize.fn("COUNT", Sequelize.col("id")), "count"]]
       })
       res.status(200).json({ data: data, message: "ok" });   
+    } catch (err) {
+      console.log(err.message);
+    }
+  },
+  getTags: async (req: Request, res: Response) => {
+    try {
+      function getTagData (url:any) {
+          axios.get(url).then(res => {
+            const $ = cheerio.load(res.data);
+            const $tagData = $('#mainbar');
+              Tag.create({
+                tagName: $tagData.find("h1").text().replace("Questions tagged ", "").replace("[", "").replace("]", ""),
+                detail: $tagData.find("p").text()
+              })
+          })
+        }
+        for(let i = 1; i < 7; i++) {
+          axios.get(`https://stackoverflow.com/tags?page=${i}&tab=popular`).then(res => {
+            const $ = cheerio.load(res.data);
+            const $tagList = $('#tags_list').find('#tags-browser').children('div.s-card');
+            $tagList.each(function (this: any) {
+              getTagData('https://stackoverflow.com' + $(this).find('a:eq(0)').attr('href'))
+            })
+          }).catch(err => {console.log(err.message)});
+        }
     } catch (err) {
       console.log(err.message);
     }

@@ -1,4 +1,4 @@
-import { AllowNull, AutoIncrement, BelongsToMany, Column, HasMany, Model, NotEmpty, PrimaryKey, Table } from "sequelize-typescript"
+import { AllowNull, AutoIncrement, BelongsToMany, Column, DataType, HasMany, Model, NotEmpty, PrimaryKey, Table } from "sequelize-typescript"
 
 import { Post } from "./Post";
 import { User } from "./User";
@@ -28,7 +28,7 @@ export class Tag extends Model implements TagI {
   tagName!: string
 
   @NotEmpty
-  @Column
+  @Column(DataType.TEXT)
   detail!: string
 
   @HasMany(() => PostTag)

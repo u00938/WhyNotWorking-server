@@ -31,7 +31,7 @@ __decorate([
 ], Tag.prototype, "tagName", void 0);
 __decorate([
     sequelize_typescript_1.NotEmpty,
-    sequelize_typescript_1.Column,
+    sequelize_typescript_1.Column(sequelize_typescript_1.DataType.TEXT),
     __metadata("design:type", String)
 ], Tag.prototype, "detail", void 0);
 __decorate([
