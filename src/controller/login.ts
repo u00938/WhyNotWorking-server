@@ -2,6 +2,7 @@ import { Request, Response } from "express"
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { User } from "../models/User"
+import axios from "axios";
 import { OAuth2Client, TokenPayload } from "google-auth-library";
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -102,5 +103,23 @@ export const controller = {
         res.status(200).json({ data: result, message: "ok" });
       })
       .catch(console.error);
+  },
+  githubLogin: async (req: Request, res: Response) => {
+    try {
+      const client_id = process.env.GITHUB_CLIENT_ID;
+      const client_secret = process.env.GITHUB_CLIENT_SECRET;
+      const url = 'https://github.com/login/oauth/access_token';
+      const code = req.body.authorizationCode;
+      if (code) {
+        await axios.post(url, { client_id, client_secret, code }, { headers: { accept: "application/json" } })
+        .then((result) => {
+          res.status(200).json({ accessToken: result.data.access_token })
+        })
+      } else {
+        res.status(400).json({ data: null, message: "should send authorization code" })
+      }
+    } catch (err) {
+      console.log(err.message);
+    }
   },
 }
