@@ -15,6 +15,7 @@ import { postTags } from "./routes/postTags";
 import { tags } from "./routes/tags";
 import { users } from "./routes/users";
 import { userTags } from "./routes/userTags";
+import { search } from "./routes/search";
 
 dotenv.config();
 
@@ -43,6 +44,7 @@ app.use("/postTags", postTags);
 app.use("/tags", tags);
 app.use("/users", users);
 app.use("/userTags", userTags);
+app.use("/search", search);
 
 app.listen(port, () => { 
   console.log("Hello")

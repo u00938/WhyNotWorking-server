@@ -38,13 +38,8 @@ export class Tag extends Model implements TagI {
   userTag!: UserTag[]
 
   @BelongsToMany(() => Post, () => PostTag)
-  postTags!: PostTag[];
+  post!: Post[];
 
   @BelongsToMany(() => User, () => UserTag)
-  userTags!: UserTag[];
-
-
-
-
-
+  user!: User[];
 }

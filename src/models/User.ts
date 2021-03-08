@@ -50,14 +50,14 @@ export class User extends Model implements UserI {
   password!: string
 
   @HasMany(() => Post)
-  posts?: Post[]
+  post?: Post[]
 
   @HasMany(() => Answer)
-  answers?: Answer[]
+  answer?: Answer[]
 
   @HasMany(() => UserTag)
   userTag!: UserTag[]
 
   @BelongsToMany(() => Tag, () => UserTag)
-  userTags!: UserTag[];
+  tag!: Tag[];
 }

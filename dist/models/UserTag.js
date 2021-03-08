@@ -38,11 +38,11 @@ __decorate([
 __decorate([
     sequelize_typescript_1.BelongsTo(() => User_1.User),
     __metadata("design:type", User_1.User)
-], UserTag.prototype, "users", void 0);
+], UserTag.prototype, "user", void 0);
 __decorate([
     sequelize_typescript_1.BelongsTo(() => Tag_1.Tag),
     __metadata("design:type", Tag_1.Tag)
-], UserTag.prototype, "tags", void 0);
+], UserTag.prototype, "tag", void 0);
 UserTag = __decorate([
     sequelize_typescript_1.Table({
         tableName: "userTags",

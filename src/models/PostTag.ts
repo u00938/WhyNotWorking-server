@@ -33,9 +33,9 @@ export class PostTag extends Model implements PostTagI {
   tagId!: number
 
   @BelongsTo(() => Post)
-  posts!: Post;
+  post!: Post;
 
   @BelongsTo(() => Tag)
-  tags!: Tag;
+  tag!: Tag;
 
 }
