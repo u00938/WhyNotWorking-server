@@ -29,6 +29,11 @@ export const controller = {
           }]
         });
         res.status(200).json({ data: data, message: "ok" });
+      } else if(req.query.tagName) {
+        const data = await Tag.findOne({
+          where: { tagName: req.query.tagName }
+        });
+        res.status(200).json({ data: data, message: "ok" });
       } else if(req.query.page) {
         let pageNum: any = req.query.page;
         let offset: number = 0;

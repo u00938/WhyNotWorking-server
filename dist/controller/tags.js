@@ -44,6 +44,12 @@ exports.controller = {
                 });
                 res.status(200).json({ data: data, message: "ok" });
             }
+            else if (req.query.tagName) {
+                const data = yield Tag_1.Tag.findOne({
+                    where: { tagName: req.query.tagName }
+                });
+                res.status(200).json({ data: data, message: "ok" });
+            }
             else if (req.query.page) {
                 let pageNum = req.query.page;
                 let offset = 0;
