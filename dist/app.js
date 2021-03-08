@@ -28,6 +28,7 @@ const postTags_1 = require("./routes/postTags");
 const tags_1 = require("./routes/tags");
 const users_1 = require("./routes/users");
 const userTags_1 = require("./routes/userTags");
+const search_1 = require("./routes/search");
 dotenv_1.default.config();
 const port = process.env.SERVER_PORT || 4000;
 const app = express_1.default();
@@ -48,6 +49,7 @@ app.use("/postTags", postTags_1.postTags);
 app.use("/tags", tags_1.tags);
 app.use("/users", users_1.users);
 app.use("/userTags", userTags_1.userTags);
+app.use("/search", search_1.search);
 app.listen(port, () => {
     console.log("Hello");
     database_1.sequelize.authenticate().then(() => __awaiter(void 0, void 0, void 0, function* () {
