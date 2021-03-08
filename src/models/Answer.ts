@@ -54,5 +54,5 @@ export class Answer extends Model implements AnswerI {
   user!: User;
 
   @BelongsTo(() => Post) 
-  Post!: Post;
+  post!: Post;
 }
