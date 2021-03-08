@@ -60,7 +60,7 @@ __decorate([
 __decorate([
     sequelize_typescript_1.BelongsTo(() => Post_1.Post),
     __metadata("design:type", Post_1.Post)
-], Answer.prototype, "Post", void 0);
+], Answer.prototype, "post", void 0);
 Answer = __decorate([
     sequelize_typescript_1.Table({
         tableName: "answers",
