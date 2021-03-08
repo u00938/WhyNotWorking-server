@@ -33,9 +33,8 @@ export class UserTag extends Model implements UserTagI {
   tagId!: number
 
   @BelongsTo(() => User)
-  users!: User;
+  user!: User;
 
   @BelongsTo(() => Tag)
-  tags!: Tag;
-
+  tag!: Tag;
 }
