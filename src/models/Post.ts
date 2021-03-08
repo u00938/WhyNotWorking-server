@@ -1,4 +1,4 @@
-import { AllowNull, AutoIncrement, BelongsTo, BelongsToMany, Column, DataType, Default, ForeignKey, HasMany, Model, NotEmpty, PrimaryKey, Table } from "sequelize-typescript"
+import { AllowNull, AutoIncrement, BelongsTo, BelongsToMany, Column, DataType, Default, ForeignKey, HasMany, HasOne, Model, NotEmpty, PrimaryKey, Table } from "sequelize-typescript"
 
 import { User } from "./User";
 import { Tag } from "./Tag";
@@ -19,7 +19,8 @@ export interface PostI {
   timestamps: true
 })
 export class Post extends Model implements PostI {
-
+  
+  @ForeignKey(() => Post)
   @AutoIncrement
   @PrimaryKey
   @Column
@@ -53,6 +54,9 @@ export class Post extends Model implements PostI {
   @Column
   views!: number
 
+  @HasOne(() => Post, { constraints: false })
+  post!: Post[]
+
   @BelongsTo(() => User) 
   user!: User;
 
@@ -60,9 +64,9 @@ export class Post extends Model implements PostI {
   postTag!: PostTag[]
 
   @HasMany(() => Answer)
-  answers!: Answer[];
+  answer!: Answer[];
 
   @BelongsToMany(() => Tag, () => PostTag)
-  postTags!: PostTag[];
+  tag!: Tag[];
 
 }
