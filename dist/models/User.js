@@ -56,11 +56,11 @@ __decorate([
 __decorate([
     sequelize_typescript_1.HasMany(() => Post_1.Post),
     __metadata("design:type", Array)
-], User.prototype, "posts", void 0);
+], User.prototype, "post", void 0);
 __decorate([
     sequelize_typescript_1.HasMany(() => Answer_1.Answer),
     __metadata("design:type", Array)
-], User.prototype, "answers", void 0);
+], User.prototype, "answer", void 0);
 __decorate([
     sequelize_typescript_1.HasMany(() => UserTag_1.UserTag),
     __metadata("design:type", Array)
@@ -68,7 +68,7 @@ __decorate([
 __decorate([
     sequelize_typescript_1.BelongsToMany(() => Tag_1.Tag, () => UserTag_1.UserTag),
     __metadata("design:type", Array)
-], User.prototype, "userTags", void 0);
+], User.prototype, "tag", void 0);
 User = __decorate([
     sequelize_typescript_1.Table({
         tableName: "users",
