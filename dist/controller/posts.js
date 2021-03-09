@@ -39,7 +39,6 @@ exports.controller = {
                                 }]
                         },
                         { model: Answer_1.Answer,
-                            attributes: ["body", "votes", "choose"],
                             include: [{
                                     model: User_1.User,
                                     attributes: ["nickname", "image"]
