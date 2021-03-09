@@ -7,6 +7,8 @@ import jwt from "jsonwebtoken";
 import { OAuth2Client } from "google-auth-library";
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 import axios from "axios";
+import AWS from 'aws-sdk';
+import fs from 'fs';
 
 export const controller = {
   get: async (req: Request, res: Response) => {
@@ -110,8 +112,21 @@ export const controller = {
         if (!email || !password || !nickname) {
           res.status(400).json({ data: null, message: "should send full data" });
         } else {
-          await User.create({ email, password: $password, nickname, location, aboutMe  });
-          res.status(200).json({ data: null, message: "ok" });
+            const s3 = new AWS.S3({
+              accessKeyId: process.env.AWS_ACCESS_KEY,
+              secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+            });
+            const param = {
+              Bucket: "whynotworking",
+              Key:
+                "image/" + nickname + "profile" + new Date().getTime() + ".jpg",
+              ACL: "public-read",
+              Body: fs.createReadStream(__dirname + "/../../1.jpeg")
+            };
+            s3.upload(param, async function (err:any, data:any) {
+              await User.create({ email, password: $password, nickname, location, aboutMe, image: data.Location });
+              res.status(200).json({ data: null, message: "ok" });
+            });
         }
       }
     } catch (err) {

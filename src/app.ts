@@ -7,6 +7,9 @@ import dotenv from "dotenv";
 import { sequelize } from "./database/database";
 import helmet from "helmet";
 
+import * as multer from 'multer';
+import * as multerS3 from 'multer-s3';
+
 import { answers } from "./routes/answers";
 import { login } from "./routes/login";
 import { logout } from "./routes/logout";
