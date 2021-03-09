@@ -85,7 +85,7 @@ exports.controller = {
     }),
     toggleChoose: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const { id } = req.body;
+            const { id } = req.query;
             if (id) {
                 const findAnswer = yield Answer_1.Answer.findOne({ where: { id } });
                 const isChoose = findAnswer.choose;
@@ -102,7 +102,7 @@ exports.controller = {
     }),
     votesUp: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const { id } = req.body;
+            const { id } = req.query;
             if (id) {
                 const findAnswer = yield Answer_1.Answer.findOne({ where: { id } });
                 const answerVotes = findAnswer.votes;
@@ -119,7 +119,7 @@ exports.controller = {
     }),
     votesDown: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const { id } = req.body;
+            const { id } = req.query;
             if (id) {
                 const findAnswer = yield Answer_1.Answer.findOne({ where: { id } });
                 const answerVotes = findAnswer.votes;

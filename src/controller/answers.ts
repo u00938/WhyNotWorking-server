@@ -67,7 +67,7 @@ export const controller = {
   },
   toggleChoose: async (req: Request, res: Response) => {
     try {
-      const { id } = req.body;
+      const { id } = req.query;
       if (id) {
         const findAnswer = await Answer.findOne({ where: { id } });
         const isChoose = findAnswer!.choose;
@@ -82,7 +82,7 @@ export const controller = {
   },
   votesUp: async (req: Request, res: Response) => {
     try {
-      const { id } = req.body;
+      const { id } = req.query;
       if (id) {
         const findAnswer = await Answer.findOne({ where: { id } });
         const answerVotes = findAnswer!.votes;
@@ -97,7 +97,7 @@ export const controller = {
   },
   votesDown: async (req: Request, res: Response) => {
     try {
-      const { id } = req.body;
+      const { id } = req.query;
       if (id) {
         const findAnswer = await Answer.findOne({ where: { id } });
         const answerVotes = findAnswer!.votes;
