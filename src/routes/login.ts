@@ -6,3 +6,4 @@ export const login = Router();
 login.post('/', controller.post);
 login.post('/googleLogin', controller.googleLogin);
 login.post('/githubLogin', controller.githubLogin);
+//login.post('/facebookLogin', controller.facebookLogin);

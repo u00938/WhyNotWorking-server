@@ -81,6 +81,19 @@ exports.controller = {
                         res.status(200).json({ data: myInfo, message: "ok" });
                     }
                 }
+                // else if(req.cookies.facebookOauthToken) {
+                //   console.log(req.cookies.facebookOauthToken);
+                //   const token: any = req.cookies.facebookOauthToken;
+                //   const profile = await axios({
+                //     url: `https://graph.facebook.com/me?fields=email,first_name,last_name&access_token=${token}`,
+                //     method: "get"
+                //   })
+                //   const picture = await axios({
+                //     url: `https://graph.facebook.com/me/picture?fields=url&type=large&redirect=0&access_token=${token}`,
+                //     method: "get"
+                //   })
+                //   res.status(200).send({ data: profile.data, picture: picture.data })
+                // }
             }
         }
         catch (err) {

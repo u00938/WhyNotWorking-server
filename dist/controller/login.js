@@ -119,5 +119,61 @@ exports.controller = {
             console.log(err.message);
         }
     }),
+    // facebookLogin: async (req: Request, res: Response) => {
+    //   try {
+    //     async function getAccessTokenFromCode(code:any) {
+    //       const { data } = await axios({
+    //         url: "https://graph.facebook.com/v10.0/oauth/access_token",
+    //         method: "get",
+    //         params: {
+    //           client_id: "428059655088288",
+    //           client_secret: "c712dcb406d3ccc0becf3bf0d971a8e1",
+    //           redirect_uri: "http://localhost:3000/auth/callback",
+    //           code
+    //         }
+    //       })
+    //       return data.access_token;
+    //     }
+    //     const token = await getAccessTokenFromCode(req.body.code);
+    //     const profile:any = await axios({
+    //       url: `https://graph.facebook.com/me?fields=email,first_name,last_name&access_token=${token}`,
+    //       method: "get"
+    //     })
+    //     const picture:any = await axios({
+    //       url: `https://graph.facebook.com/me/picture?fields=url&type=large&redirect=0&access_token=${token}`,
+    //       method: "get"
+    //     })
+    //     const [result, created] = await User.findOrCreate({
+    //       where: { email: profile.data.email, nickname: profile.data.last_name+profile.data.first_name },
+    //       defaults: {
+    //         email: profile.email,
+    //         nickname: profile.data.last_name+profile.data.first_name,
+    //         image: picture.data.data.url
+    //       }
+    //     });
+    //     interface Options {
+    //       // domain?: string,
+    //       path: string;
+    //       httpOnly: boolean;
+    //       secure: boolean;
+    //       sameSite: string;
+    //       maxAge: number;
+    //       overwrite: boolean;
+    //     }
+    //     const options: any = {
+    //       //domain: "localhost",
+    //       path: "/",
+    //       httpOnly: true,
+    //       //secure: true,
+    //       //sameSite: "none",
+    //       maxAge: 1000 * 60 * 60 * 24,
+    //       overwrite: true,
+    //     } as Options
+    //     res.cookie("facebookOauthToken", token, options);
+    //     res.status(200).json({ data: result, message: "ok" });
+    //   } catch (err) {
+    //     console.log(err.message);
+    //   }
+    // }
 };
 //# sourceMappingURL=login.js.map
