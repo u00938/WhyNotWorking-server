@@ -50,7 +50,6 @@ export const controller = {
               }]
             },
             { model: Answer, 
-              attributes: ["body", "votes", "choose"], 
               include: [{ 
                 model: User, 
                 attributes: ["nickname", "image"] 
@@ -83,7 +82,6 @@ export const controller = {
               }]
             },
             { model: Answer, 
-              attributes: ["body", "votes", "choose"], 
               include: [{ 
                 model: User, 
                 attributes: ["nickname", "image"] 
@@ -91,9 +89,18 @@ export const controller = {
             },
           ],
           where: {
-            body: {
-              [Op.like]: "%" + query.word + "%"
-            }
+            [Op.or]: [
+              {
+                title: {
+                  [Op.like]: "%" + query.word + "%"
+                  }
+              },
+              {
+                body: {
+                [Op.like]: "%" + query.word + "%"
+                }
+              }
+            ]
           },
           offset,
           limit: 15
@@ -123,7 +130,6 @@ export const controller = {
                 }]
               },
               { model: Answer, 
-                attributes: ["body", "votes", "choose"], 
                 include: [{ 
                   model: User, 
                   attributes: ["nickname", "image"] 
@@ -145,7 +151,6 @@ export const controller = {
                 }]
               },
               { model: Answer, 
-                attributes: ["body", "votes", "choose"], 
                 include: [{ 
                   model: User, 
                   attributes: ["nickname", "image"] 
@@ -153,9 +158,18 @@ export const controller = {
               },
             ],
             where: {
-              body: {
-                [Op.like]: "%" + query.q + "%"
-              }
+              [Op.or]: [
+                {
+                  title: {
+                    [Op.like]: "%" + query.q + "%"
+                    }
+                },
+                {
+                  body: {
+                  [Op.like]: "%" + query.q + "%"
+                  }
+                }
+              ]
             },
             offset,
             limit: 15

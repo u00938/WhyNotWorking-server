@@ -57,7 +57,6 @@ exports.controller = {
                                 }]
                         },
                         { model: Answer_1.Answer,
-                            attributes: ["body", "votes", "choose"],
                             include: [{
                                     model: User_1.User,
                                     attributes: ["nickname", "image"]
@@ -87,7 +86,6 @@ exports.controller = {
                                 }]
                         },
                         { model: Answer_1.Answer,
-                            attributes: ["body", "votes", "choose"],
                             include: [{
                                     model: User_1.User,
                                     attributes: ["nickname", "image"]
@@ -95,9 +93,18 @@ exports.controller = {
                         },
                     ],
                     where: {
-                        body: {
-                            [sequelize_1.Op.like]: "%" + query.word + "%"
-                        }
+                        [sequelize_1.Op.or]: [
+                            {
+                                title: {
+                                    [sequelize_1.Op.like]: "%" + query.word + "%"
+                                }
+                            },
+                            {
+                                body: {
+                                    [sequelize_1.Op.like]: "%" + query.word + "%"
+                                }
+                            }
+                        ]
                     },
                     offset,
                     limit: 15
@@ -126,7 +133,6 @@ exports.controller = {
                                     }]
                             },
                             { model: Answer_1.Answer,
-                                attributes: ["body", "votes", "choose"],
                                 include: [{
                                         model: User_1.User,
                                         attributes: ["nickname", "image"]
@@ -149,7 +155,6 @@ exports.controller = {
                                     }]
                             },
                             { model: Answer_1.Answer,
-                                attributes: ["body", "votes", "choose"],
                                 include: [{
                                         model: User_1.User,
                                         attributes: ["nickname", "image"]
@@ -157,9 +162,18 @@ exports.controller = {
                             },
                         ],
                         where: {
-                            body: {
-                                [sequelize_1.Op.like]: "%" + query.q + "%"
-                            }
+                            [sequelize_1.Op.or]: [
+                                {
+                                    title: {
+                                        [sequelize_1.Op.like]: "%" + query.q + "%"
+                                    }
+                                },
+                                {
+                                    body: {
+                                        [sequelize_1.Op.like]: "%" + query.q + "%"
+                                    }
+                                }
+                            ]
                         },
                         offset,
                         limit: 15
