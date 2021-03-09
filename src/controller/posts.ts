@@ -26,7 +26,7 @@ export const controller = {
               }]
             },
             { model: Answer, 
-              attributes: ["body", "votes", "choose"], 
+
               include: [{ 
                 model: User, 
                 attributes: ["nickname", "image"] 
