@@ -166,7 +166,7 @@ exports.controller = {
     }),
     viewsUp: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const { id } = req.body;
+            const { id } = req.query;
             if (id) {
                 const findPost = yield Post_1.Post.findOne({ where: { id } });
                 const postViews = findPost.views;
@@ -183,7 +183,7 @@ exports.controller = {
     }),
     votesUp: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const { id } = req.body;
+            const { id } = req.query;
             if (id) {
                 const findPost = yield Post_1.Post.findOne({ where: { id } });
                 const postVotes = findPost.votes;
@@ -200,7 +200,7 @@ exports.controller = {
     }),
     votesDown: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const { id } = req.body;
+            const { id } = req.query;
             if (id) {
                 const findPost = yield Post_1.Post.findOne({ where: { id } });
                 const postVotes = findPost.votes;
