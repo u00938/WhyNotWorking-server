@@ -61,7 +61,6 @@ exports.controller = {
                                 }]
                         },
                         { model: Answer_1.Answer,
-                            attributes: ["body", "votes", "choose"],
                             include: [{
                                     model: User_1.User,
                                     attributes: ["nickname", "image"]
@@ -83,7 +82,6 @@ exports.controller = {
                                 }]
                         },
                         { model: Answer_1.Answer,
-                            attributes: ["body", "votes", "choose"],
                             include: [{
                                     model: User_1.User,
                                     attributes: ["nickname", "image"]
@@ -118,7 +116,7 @@ exports.controller = {
             res.status(200).json({ data: postTitle, message: "ok" });
         }
         catch (err) {
-            console.log(err);
+            console.log(err.message);
         }
     }),
     post: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -168,9 +166,11 @@ exports.controller = {
     }),
     viewsUp: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const { id, views } = req.body;
-            if (id && views) {
-                yield Post_1.Post.update({ views: views + 1 }, { where: { id } });
+            const { id } = req.body;
+            if (id) {
+                const findPost = yield Post_1.Post.findOne({ where: { id } });
+                const postViews = findPost.views;
+                yield Post_1.Post.update({ views: postViews + 1 }, { where: { id } });
                 res.status(200).json({ data: null, message: "ok" });
             }
             else {
@@ -183,9 +183,11 @@ exports.controller = {
     }),
     votesUp: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const { id, votes } = req.body;
-            if (id && votes) {
-                yield Post_1.Post.update({ votes: votes + 1 }, { where: { id } });
+            const { id } = req.body;
+            if (id) {
+                const findPost = yield Post_1.Post.findOne({ where: { id } });
+                const postVotes = findPost.votes;
+                yield Post_1.Post.update({ votes: postVotes + 1 }, { where: { id } });
                 res.status(200).json({ data: null, message: "ok" });
             }
             else {
@@ -198,9 +200,11 @@ exports.controller = {
     }),
     votesDown: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const { id, votes } = req.body;
-            if (id && votes) {
-                yield Post_1.Post.update({ votes: votes - 1 }, { where: { id } });
+            const { id } = req.body;
+            if (id) {
+                const findPost = yield Post_1.Post.findOne({ where: { id } });
+                const postVotes = findPost.votes;
+                yield Post_1.Post.update({ votes: postVotes - 1 }, { where: { id } });
                 res.status(200).json({ data: null, message: "ok" });
             }
             else {

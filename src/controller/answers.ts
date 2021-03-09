@@ -67,9 +67,11 @@ export const controller = {
   },
   toggleChoose: async (req: Request, res: Response) => {
     try {
-      const { id, choose } = req.body;
-      if (id && choose !== undefined) {
-        await Answer.update({ choose: !choose }, { where:  { id } });
+      const { id } = req.body;
+      if (id) {
+        const findAnswer = await Answer.findOne({ where: { id } });
+        const isChoose = findAnswer!.choose;
+        await Answer.update({ choose: !isChoose }, { where:  { id } });
         res.status(200).json({ data: null, message: "ok" });
       } else {
         res.status(400).json({ data: null, message: "should send full data" });
@@ -80,9 +82,11 @@ export const controller = {
   },
   votesUp: async (req: Request, res: Response) => {
     try {
-      const { id, votes } = req.body;
-      if (id && votes !== undefined) {
-        await Answer.update({ votes: votes + 1 }, { where: { id }});
+      const { id } = req.body;
+      if (id) {
+        const findAnswer = await Answer.findOne({ where: { id } });
+        const answerVotes = findAnswer!.votes;
+        await Answer.update({ votes: answerVotes + 1 }, { where: { id }});
         res.status(200).json({ data: null, message: "ok" });
       } else {
         res.status(400).json({ data: null, message: "should send full data" });
@@ -93,12 +97,14 @@ export const controller = {
   },
   votesDown: async (req: Request, res: Response) => {
     try {
-      const { id, votes } = req.body;
+      const { id } = req.body;
       if (id) {
-        if (votes === 0) {
+        const findAnswer = await Answer.findOne({ where: { id } });
+        const answerVotes = findAnswer!.votes;
+        if (answerVotes === 0) {
           res.status(400).json({ data: null, message: "votes cannot be negative" })
-        } else if (votes > 0) {
-          await Answer.update({ votes: votes - 1 }, { where: { id }});
+        } else if (answerVotes > 0) {
+          await Answer.update({ votes: answerVotes - 1 }, { where: { id }});
           res.status(200).json({ data: null, message: "ok" });
         }
       } else {

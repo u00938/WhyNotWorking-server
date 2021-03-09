@@ -85,9 +85,11 @@ exports.controller = {
     }),
     toggleChoose: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const { id, choose } = req.body;
-            if (id && choose !== undefined) {
-                yield Answer_1.Answer.update({ choose: !choose }, { where: { id } });
+            const { id } = req.body;
+            if (id) {
+                const findAnswer = yield Answer_1.Answer.findOne({ where: { id } });
+                const isChoose = findAnswer.choose;
+                yield Answer_1.Answer.update({ choose: !isChoose }, { where: { id } });
                 res.status(200).json({ data: null, message: "ok" });
             }
             else {
@@ -100,9 +102,11 @@ exports.controller = {
     }),
     votesUp: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const { id, votes } = req.body;
-            if (id && votes !== undefined) {
-                yield Answer_1.Answer.update({ votes: votes + 1 }, { where: { id } });
+            const { id } = req.body;
+            if (id) {
+                const findAnswer = yield Answer_1.Answer.findOne({ where: { id } });
+                const answerVotes = findAnswer.votes;
+                yield Answer_1.Answer.update({ votes: answerVotes + 1 }, { where: { id } });
                 res.status(200).json({ data: null, message: "ok" });
             }
             else {
@@ -115,13 +119,15 @@ exports.controller = {
     }),
     votesDown: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const { id, votes } = req.body;
+            const { id } = req.body;
             if (id) {
-                if (votes === 0) {
+                const findAnswer = yield Answer_1.Answer.findOne({ where: { id } });
+                const answerVotes = findAnswer.votes;
+                if (answerVotes === 0) {
                     res.status(400).json({ data: null, message: "votes cannot be negative" });
                 }
-                else if (votes > 0) {
-                    yield Answer_1.Answer.update({ votes: votes - 1 }, { where: { id } });
+                else if (answerVotes > 0) {
+                    yield Answer_1.Answer.update({ votes: answerVotes - 1 }, { where: { id } });
                     res.status(200).json({ data: null, message: "ok" });
                 }
             }
