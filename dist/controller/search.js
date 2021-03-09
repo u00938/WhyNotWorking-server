@@ -77,6 +77,32 @@ exports.controller = {
             if (query.score) {
             }
             if (query.word) {
+                const postByword = yield Post_1.Post.findAll({
+                    include: [
+                        { model: User_1.User, attributes: ["nickname", "image"] },
+                        { model: PostTag_1.PostTag, attributes: ["tagId"],
+                            include: [{
+                                    model: Tag_1.Tag,
+                                    attributes: ["tagName"],
+                                }]
+                        },
+                        { model: Answer_1.Answer,
+                            attributes: ["body", "votes", "choose"],
+                            include: [{
+                                    model: User_1.User,
+                                    attributes: ["nickname", "image"]
+                                }]
+                        },
+                    ],
+                    where: {
+                        body: {
+                            [sequelize_1.Op.like]: "%" + query.word + "%"
+                        }
+                    },
+                    offset,
+                    limit: 15
+                });
+                res.status(200).json({ data: { postByword }, message: "ok" });
             }
             if (query.isaccepted) {
             }

@@ -73,7 +73,32 @@ export const controller = {
 
       }
       if (query.word) {
-
+        const postByword = await Post.findAll({
+          include: [
+            { model: User, attributes: ["nickname", "image"] },
+            { model: PostTag, attributes: ["tagId"], 
+              include: [{
+                model: Tag,
+                attributes: ["tagName"],
+              }]
+            },
+            { model: Answer, 
+              attributes: ["body", "votes", "choose"], 
+              include: [{ 
+                model: User, 
+                attributes: ["nickname", "image"] 
+              }] 
+            },
+          ],
+          where: {
+            body: {
+              [Op.like]: "%" + query.word + "%"
+            }
+          },
+          offset,
+          limit: 15
+        })
+        res.status(200).json({ data: { postByword }, message: "ok" })
       }
       if (query.isaccepted) {
 
