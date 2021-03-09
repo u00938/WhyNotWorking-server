@@ -144,7 +144,7 @@ export const controller = {
   },
   viewsUp: async (req: Request, res: Response) => {
     try {
-      const { id } = req.body;
+      const { id } = req.query;
       if (id) {
         const findPost = await Post.findOne({ where: { id } });
         const postViews = findPost!.views;
@@ -159,7 +159,7 @@ export const controller = {
   },
   votesUp: async (req: Request, res: Response) => {
     try {
-      const { id } = req.body;
+      const { id } = req.query;
       if (id) {
         const findPost = await Post.findOne({ where: { id } });
         const postVotes = findPost!.votes;
@@ -174,7 +174,7 @@ export const controller = {
   },
   votesDown: async (req: Request, res: Response) => {
     try {
-      const { id } = req.body;
+      const { id } = req.query;
       if (id) {
         const findPost = await Post.findOne({ where: { id } });
         const postVotes = findPost!.votes;
