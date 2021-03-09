@@ -96,6 +96,16 @@ export const controller = {
       console.log(err.message);
     }
   },
+  getTitle: async (req: Request, res: Response) => {
+    try {
+      const postTitle = await Post.findAll({
+        attributes: ["id", "title"]
+      })
+      res.status(200).json({ data: postTitle, message: "ok" });
+    } catch (err) {
+      console.log(err)
+    }
+  },
   post: async (req: Request, res: Response) => {
     try {
       const { userId, title, body } = req.body;
