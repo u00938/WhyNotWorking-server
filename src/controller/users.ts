@@ -5,8 +5,8 @@ import bcrypt from "bcrypt";
 import Sequelize from "sequelize";
 import jwt from "jsonwebtoken";
 import { OAuth2Client } from "google-auth-library";
-import { sequelize } from "../database/database";
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+import axios from "axios";
 
 export const controller = {
   get: async (req: Request, res: Response) => {
@@ -65,7 +65,20 @@ export const controller = {
           if(myInfo) {
             res.status(200).json({ data: myInfo, message: "ok" });
           }
-        }
+        } 
+        // else if(req.cookies.facebookOauthToken) {
+        //   console.log(req.cookies.facebookOauthToken);
+        //   const token: any = req.cookies.facebookOauthToken;
+        //   const profile = await axios({
+        //     url: `https://graph.facebook.com/me?fields=email,first_name,last_name&access_token=${token}`,
+        //     method: "get"
+        //   })
+        //   const picture = await axios({
+        //     url: `https://graph.facebook.com/me/picture?fields=url&type=large&redirect=0&access_token=${token}`,
+        //     method: "get"
+        //   })
+        //   res.status(200).send({ data: profile.data, picture: picture.data })
+        // }
         }
       } catch (err) {
       console.log(err.message);

@@ -7,4 +7,5 @@ exports.login = express_1.Router();
 exports.login.post('/', login_1.controller.post);
 exports.login.post('/googleLogin', login_1.controller.googleLogin);
 exports.login.post('/githubLogin', login_1.controller.githubLogin);
+//login.post('/facebookLogin', controller.facebookLogin);
 //# sourceMappingURL=login.js.map
