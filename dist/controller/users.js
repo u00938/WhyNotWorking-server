@@ -20,6 +20,8 @@ const sequelize_1 = __importDefault(require("sequelize"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const google_auth_library_1 = require("google-auth-library");
 const client = new google_auth_library_1.OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+const aws_sdk_1 = __importDefault(require("aws-sdk"));
+const fs_1 = __importDefault(require("fs"));
 exports.controller = {
     get: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
@@ -129,8 +131,22 @@ exports.controller = {
                     res.status(400).json({ data: null, message: "should send full data" });
                 }
                 else {
-                    yield User_1.User.create({ email, password: $password, nickname, location, aboutMe });
-                    res.status(200).json({ data: null, message: "ok" });
+                    const s3 = new aws_sdk_1.default.S3({
+                        accessKeyId: process.env.AWS_ACCESS_KEY,
+                        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+                    });
+                    const param = {
+                        Bucket: "whynotworking",
+                        Key: "image/" + nickname + "profile" + new Date().getTime() + ".jpg",
+                        ACL: "public-read",
+                        Body: fs_1.default.createReadStream(__dirname + "/../../1.jpeg")
+                    };
+                    s3.upload(param, function (err, data) {
+                        return __awaiter(this, void 0, void 0, function* () {
+                            yield User_1.User.create({ email, password: $password, nickname, location, aboutMe, image: data.Location });
+                            res.status(200).json({ data: null, message: "ok" });
+                        });
+                    });
                 }
             }
         }
