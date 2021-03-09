@@ -11,7 +11,7 @@ exports.posts.get('/title', token_1.tokenChecker, posts_1.controller.getTitle);
 exports.posts.post('/', token_1.tokenChecker, posts_1.controller.post);
 exports.posts.patch('/', token_1.tokenChecker, posts_1.controller.patch);
 exports.posts.delete('/', token_1.tokenChecker, posts_1.controller.delete);
-exports.posts.patch('/viewsUp', token_1.tokenChecker, posts_1.controller.viewsUp);
-exports.posts.patch('/votesUp', token_1.tokenChecker, posts_1.controller.votesUp);
-exports.posts.patch('/votesDown', token_1.tokenChecker, posts_1.controller.votesDown);
+exports.posts.get('/viewsUp', token_1.tokenChecker, posts_1.controller.viewsUp);
+exports.posts.get('/votesUp', token_1.tokenChecker, posts_1.controller.votesUp);
+exports.posts.get('/votesDown', token_1.tokenChecker, posts_1.controller.votesDown);
 //# sourceMappingURL=posts.js.map

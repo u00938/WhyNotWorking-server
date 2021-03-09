@@ -26,7 +26,6 @@ export const controller = {
               }]
             },
             { model: Answer, 
-
               include: [{ 
                 model: User, 
                 attributes: ["nickname", "image"] 
@@ -49,7 +48,6 @@ export const controller = {
               }]
             },
             { model: Answer, 
-              attributes: ["body", "votes", "choose"], 
               include: [{ 
                 model: User, 
                 attributes: ["nickname", "image"] 
@@ -71,7 +69,6 @@ export const controller = {
               }]
             },
             { model: Answer, 
-              attributes: ["body", "votes", "choose"], 
               include: [{ 
                 model: User, 
                 attributes: ["nickname", "image"] 
@@ -103,7 +100,7 @@ export const controller = {
       })
       res.status(200).json({ data: postTitle, message: "ok" });
     } catch (err) {
-      console.log(err)
+      console.log(err.message);
     }
   },
   post: async (req: Request, res: Response) => {
@@ -147,9 +144,11 @@ export const controller = {
   },
   viewsUp: async (req: Request, res: Response) => {
     try {
-      const { id, views } = req.body;
-      if (id && views) {
-        await Post.update({ views: views + 1 }, { where: { id } })
+      const { id } = req.body;
+      if (id) {
+        const findPost = await Post.findOne({ where: { id } });
+        const postViews = findPost!.views;
+        await Post.update({ views: postViews + 1 }, { where: { id } })
         res.status(200).json({ data: null, message: "ok" });
       } else {
         res.status(400).json({ data: null, message: "should send id" });
@@ -160,9 +159,11 @@ export const controller = {
   },
   votesUp: async (req: Request, res: Response) => {
     try {
-      const { id, votes } = req.body;
-      if (id && votes) {
-        await Post.update({ votes: votes + 1 }, { where: { id } })
+      const { id } = req.body;
+      if (id) {
+        const findPost = await Post.findOne({ where: { id } });
+        const postVotes = findPost!.votes;
+        await Post.update({ votes: postVotes + 1 }, { where: { id } })
         res.status(200).json({ data: null, message: "ok" });
       } else {
         res.status(400).json({ data: null, message: "should send id" });
@@ -173,9 +174,11 @@ export const controller = {
   },
   votesDown: async (req: Request, res: Response) => {
     try {
-      const { id, votes } = req.body;
-      if (id && votes) {
-        await Post.update({ votes: votes - 1 }, { where: { id } })
+      const { id } = req.body;
+      if (id) {
+        const findPost = await Post.findOne({ where: { id } });
+        const postVotes = findPost!.votes;
+        await Post.update({ votes: postVotes - 1 }, { where: { id } });
         res.status(200).json({ data: null, message: "ok" });
       } else {
         res.status(400).json({ data: null, message: "should send id" });
