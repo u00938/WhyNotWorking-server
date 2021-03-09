@@ -8,15 +8,13 @@ export const controller = {
     if(!userId || !tagId) {
       res.status(400).json({ data: null, message: "should send full data" })
     } else {
-      const [result, created] = await UserTag.findOrCreate({
-        where: req.body,
-        defaults: req.body
-      });
-      if(created) {
-        res.status(200).json({ data: null, message: "ok" })
-      } else {
-      res.status(400).json({ data:null, message: "Please check again" });
+      for(let i = 0; i < tagId.length; i++) {
+        await UserTag.findOrCreate({
+          where: { userId, tagId: tagId[i] },
+          defaults: { userId, tagId: tagId[i] }
+        });
       }
+        res.status(200).json({ data: null, message: "ok" })
     }
     } catch (err) {
       console.log(err.message)
