@@ -111,6 +111,17 @@ exports.controller = {
             console.log(err.message);
         }
     }),
+    getTitle: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const postTitle = yield Post_1.Post.findAll({
+                attributes: ["id", "title"]
+            });
+            res.status(200).json({ data: postTitle, message: "ok" });
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }),
     post: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const { userId, title, body } = req.body;
