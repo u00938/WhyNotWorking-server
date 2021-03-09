@@ -19,16 +19,13 @@ exports.controller = {
                 res.status(400).json({ data: null, message: "should send full data" });
             }
             else {
-                const [result, created] = yield PostTag_1.PostTag.findOrCreate({
-                    where: req.body,
-                    defaults: req.body
-                });
-                if (created) {
-                    res.status(200).json({ data: null, message: "ok" });
+                for (let i = 0; i < tagId.length; i++) {
+                    yield PostTag_1.PostTag.findOrCreate({
+                        where: { postId, tagId: tagId[i] },
+                        defaults: { postId, tagId: tagId[i] }
+                    });
                 }
-                else {
-                    res.status(400).json({ data: null, message: "Please check again" });
-                }
+                res.status(200).json({ data: null, message: "ok" });
             }
         }
         catch (err) {

@@ -114,19 +114,31 @@ exports.controller = {
     }),
     post: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const { tagName } = req.body;
+            const { tagName, detail } = req.body;
             if (!tagName) {
                 res.status(400).json({ data: null, message: "should send tagName" });
             }
             else {
-                const [result, created] = yield Tag_1.Tag.findOrCreate({
-                    where: { tagName },
-                    defaults: req.body
-                });
-                if (created) {
-                    res.status(200).json({ data: null, message: "ok" });
+                const tagNum = [];
+                if (detail) {
+                    for (let i = 0; i < tagName.length; i++) {
+                        const [result, created] = yield Tag_1.Tag.findOrCreate({
+                            where: { tagName: tagName[i], detail: detail[i] },
+                            defaults: { tagName: tagName[i], detail: detail[i] }
+                        });
+                        tagNum.push(result.id);
+                    }
                 }
-                res.status(400).json({ data: null, message: "Please check again" });
+                else {
+                    for (let i = 0; i < tagName.length; i++) {
+                        const [result, created] = yield Tag_1.Tag.findOrCreate({
+                            where: { tagName: tagName[i] },
+                            defaults: { tagName: tagName[i] }
+                        });
+                        tagNum.push(result.id);
+                    }
+                }
+                res.status(200).json({ data: tagNum, message: "ok" });
             }
         }
         catch (err) {
