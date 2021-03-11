@@ -145,15 +145,17 @@ exports.controller = {
                     s3.upload(param, function (err, data) {
                         return __awaiter(this, void 0, void 0, function* () {
                             const userData = yield User_1.User.create({ email, password: $password, nickname, location, aboutMe, image: data.Location });
-                            for (let i = 0; i < tags.length; i++) {
-                                const [result, created] = yield Tag_1.Tag.findOrCreate({
-                                    where: { tagName: tags[i] },
-                                    defaults: { tagName: tags[i] }
-                                });
-                                yield UserTag_1.UserTag.findOrCreate({
-                                    where: { userId: userData.id, tagId: result.id },
-                                    defaults: { userId: userData.id, tagId: result.id }
-                                });
+                            if (tags) {
+                                for (let i = 0; i < tags.length; i++) {
+                                    const [result, created] = yield Tag_1.Tag.findOrCreate({
+                                        where: { tagName: tags[i] },
+                                        defaults: { tagName: tags[i] }
+                                    });
+                                    yield UserTag_1.UserTag.findOrCreate({
+                                        where: { userId: userData.id, tagId: result.id },
+                                        defaults: { userId: userData.id, tagId: result.id }
+                                    });
+                                }
                             }
                             res.status(200).json({ data: null, message: "ok" });
                         });
