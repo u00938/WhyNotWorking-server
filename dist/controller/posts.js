@@ -121,10 +121,20 @@ exports.controller = {
     }),
     post: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const { userId, title, body } = req.body;
+            const { userId, title, body, tags } = req.body;
             if (userId && title && body) {
-                const data = yield Post_1.Post.create({ userId, title, body });
-                res.status(200).json({ data: data.id, message: "ok" });
+                const postData = yield Post_1.Post.create({ userId, title, body });
+                for (let i = 0; i < tags.length; i++) {
+                    const [result, created] = yield Tag_1.Tag.findOrCreate({
+                        where: { tagName: tags[i] },
+                        defaults: { tagName: tags[i] }
+                    });
+                    yield PostTag_1.PostTag.findOrCreate({
+                        where: { postId: postData.id, tagId: result.id },
+                        defaults: { postId: postData.id, tagId: result.id }
+                    });
+                }
+                res.status(200).json({ data: postData.id, message: "ok" });
             }
             else {
                 res.status(400).json({ data: null, message: "should send full data" });

@@ -1,6 +1,7 @@
 import { Request, Response } from "express"
 import { User } from "../models/User"
 import { Tag } from "../models/Tag"
+import { UserTag } from "../models/UserTag"
 import bcrypt from "bcrypt";
 import Sequelize from "sequelize";
 import jwt from "jsonwebtoken";
@@ -98,7 +99,7 @@ export const controller = {
   },
   signUp: async (req: Request, res: Response) => {
     try {
-      const { email, password, nickname, location, aboutMe } = req.body;
+      const { email, password, nickname, location, aboutMe, tags } = req.body;
       const sameEmail = await User.findOne({ where: { email } });
       const sameNickname = await User.findOne({ where: { nickname } });
 
@@ -124,7 +125,17 @@ export const controller = {
               Body: fs.createReadStream(__dirname + "/../../1.jpeg")
             };
             s3.upload(param, async function (err:any, data:any) {
-              await User.create({ email, password: $password, nickname, location, aboutMe, image: data.Location });
+              const userData = await User.create({ email, password: $password, nickname, location, aboutMe, image: data.Location });
+              for(let i = 0; i < tags.length; i++) {
+                const [result, created] = await Tag.findOrCreate({
+                  where: { tagName: tags[i] },
+                  defaults: { tagName: tags[i] }
+                });
+                await UserTag.findOrCreate({
+                  where: { userId: userData.id, tagId: result.id },
+                  defaults: { userId: userData.id, tagId: result.id }
+                });
+              }
               res.status(200).json({ data: null, message: "ok" });
             });
         }
