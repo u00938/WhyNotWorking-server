@@ -1,5 +1,6 @@
-import { Request, Response } from "express"
-import { Answer } from "../models/Answer"
+import { Request, Response } from "express";
+import { Answer } from "../models/Answer";
+import { Post } from "../models/Post";
 
 export const controller = {
   get: async (req: Request, res: Response) => {
@@ -14,6 +15,9 @@ export const controller = {
       }
       if (query.user_id) {
         const answerByUserId = await Answer.findAll({
+          include: [ 
+            { model: Post, attributes: ["title"] } 
+          ],
           where: { userId: query.user_id }
         });
         if (answerByUserId) res.status(200).json({ data: answerByUserId, message: "ok" });

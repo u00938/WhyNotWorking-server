@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.controller = void 0;
 const Answer_1 = require("../models/Answer");
+const Post_1 = require("../models/Post");
 exports.controller = {
     get: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
@@ -26,6 +27,9 @@ exports.controller = {
             }
             if (query.user_id) {
                 const answerByUserId = yield Answer_1.Answer.findAll({
+                    include: [
+                        { model: Post_1.Post, attributes: ["title"] }
+                    ],
                     where: { userId: query.user_id }
                 });
                 if (answerByUserId)
