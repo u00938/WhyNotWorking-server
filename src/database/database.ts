@@ -11,7 +11,8 @@ import { UserTag } from "../models/UserTag";
 import { Answer } from "../models/Answer";
 
 export const sequelize: Sequelize = new Sequelize({
-  host: process.env.HOST,
+  port: (process.env.DB_PORT as unknown) as number,
+  host: process.env.DB_HOST,
   username: process.env.USERNAME,
   password: process.env.PASSWORD,
   database: process.env.DATABASE,
