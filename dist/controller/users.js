@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.controller = void 0;
 const User_1 = require("../models/User");
 const Tag_1 = require("../models/Tag");
+const UserTag_1 = require("../models/UserTag");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const sequelize_1 = __importDefault(require("sequelize"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
@@ -115,7 +116,7 @@ exports.controller = {
     }),
     signUp: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const { email, password, nickname, location, aboutMe } = req.body;
+            const { email, password, nickname, location, aboutMe, tags } = req.body;
             const sameEmail = yield User_1.User.findOne({ where: { email } });
             const sameNickname = yield User_1.User.findOne({ where: { nickname } });
             if (sameEmail) {
@@ -143,7 +144,17 @@ exports.controller = {
                     };
                     s3.upload(param, function (err, data) {
                         return __awaiter(this, void 0, void 0, function* () {
-                            yield User_1.User.create({ email, password: $password, nickname, location, aboutMe, image: data.Location });
+                            const userData = yield User_1.User.create({ email, password: $password, nickname, location, aboutMe, image: data.Location });
+                            for (let i = 0; i < tags.length; i++) {
+                                const [result, created] = yield Tag_1.Tag.findOrCreate({
+                                    where: { tagName: tags[i] },
+                                    defaults: { tagName: tags[i] }
+                                });
+                                yield UserTag_1.UserTag.findOrCreate({
+                                    where: { userId: userData.id, tagId: result.id },
+                                    defaults: { userId: userData.id, tagId: result.id }
+                                });
+                            }
                             res.status(200).json({ data: null, message: "ok" });
                         });
                     });

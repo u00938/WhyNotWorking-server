@@ -105,10 +105,20 @@ export const controller = {
   },
   post: async (req: Request, res: Response) => {
     try {
-      const { userId, title, body } = req.body;
+      const { userId, title, body, tags } = req.body;
       if (userId && title && body) {
-        const data = await Post.create({ userId, title, body });
-        res.status(200).json({ data: data.id, message: "ok" })
+        const postData = await Post.create({ userId, title, body });
+        for(let i = 0; i < tags.length; i++) {
+          const [result, created] = await Tag.findOrCreate({
+            where: { tagName: tags[i] },
+            defaults: { tagName: tags[i] }
+          });
+          await PostTag.findOrCreate({
+            where: { postId: postData.id, tagId: result.id },
+            defaults: { postId: postData.id, tagId: result.id }
+          });
+        }
+        res.status(200).json({ data: postData.id, message: "ok" })
       } else {
         res.status(400).json({ data: null, message: "should send full data" })
       }
