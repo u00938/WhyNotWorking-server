@@ -33,7 +33,7 @@ app.use(helmet());
 
 app.use(
   cors({
-    origin: true,
+    origin: "http://localhost:3000",
     methods: "GET, POST, PATCH, DELETE, OPTIONS",
     credentials: true
   })

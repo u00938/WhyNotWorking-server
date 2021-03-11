@@ -16,7 +16,7 @@ const generateToken = (payload: any) => {
 };
 
 interface Options {
-  // domain?: string,
+  domain?: string,
   path: string;
   httpOnly: boolean;
   secure: boolean;
@@ -43,11 +43,11 @@ export const tokenChecker = async (req: Request, res: Response, next: NextFuncti
       delete payload.exp;
       const newToken = await generateToken(payload);
       const options: any = {
-        //domain: "localhost",
+        domain: "localhost",
         path: "/",
         httpOnly: true,
-        //secure: true,
-        //sameSite: "none",
+        secure: true,
+        sameSite: "none",
         maxAge: 1000 * 60 * 60 * 24,
         overwrite: true,
       } as Options

@@ -33,11 +33,11 @@ const tokenChecker = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
             delete payload.exp;
             const newToken = yield generateToken(payload);
             const options = {
-                //domain: "localhost",
+                domain: "localhost",
                 path: "/",
                 httpOnly: true,
-                //secure: true,
-                //sameSite: "none",
+                secure: true,
+                sameSite: "none",
                 maxAge: 1000 * 60 * 60 * 24,
                 overwrite: true,
             };

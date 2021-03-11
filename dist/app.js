@@ -37,7 +37,7 @@ app.use(cookie_parser_1.default());
 app.use(body_parser_1.json());
 app.use(helmet_1.default());
 app.use(cors_1.default({
-    origin: true,
+    origin: "http://localhost:3000",
     methods: "GET, POST, PATCH, DELETE, OPTIONS",
     credentials: true
 }));
