@@ -126,15 +126,17 @@ export const controller = {
             };
             s3.upload(param, async function (err:any, data:any) {
               const userData = await User.create({ email, password: $password, nickname, location, aboutMe, image: data.Location });
-              for(let i = 0; i < tags.length; i++) {
-                const [result, created] = await Tag.findOrCreate({
-                  where: { tagName: tags[i] },
-                  defaults: { tagName: tags[i] }
-                });
-                await UserTag.findOrCreate({
-                  where: { userId: userData.id, tagId: result.id },
-                  defaults: { userId: userData.id, tagId: result.id }
-                });
+              if(tags) {
+                for(let i = 0; i < tags.length; i++) {
+                  const [result, created] = await Tag.findOrCreate({
+                    where: { tagName: tags[i] },
+                    defaults: { tagName: tags[i] }
+                  });
+                  await UserTag.findOrCreate({
+                    where: { userId: userData.id, tagId: result.id },
+                    defaults: { userId: userData.id, tagId: result.id }
+                  });
+                }
               }
               res.status(200).json({ data: null, message: "ok" });
             });
