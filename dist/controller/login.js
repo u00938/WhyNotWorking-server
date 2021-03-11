@@ -44,11 +44,11 @@ exports.controller = {
                     if (err)
                         res.status(404).json({ data: null, message: err.message });
                     const options = {
-                        //domain: "localhost",
+                        domain: "localhost",
                         path: "/",
                         httpOnly: true,
-                        //secure: true,
-                        //sameSite: "none",
+                        secure: true,
+                        sameSite: "none",
                         maxAge: 1000 * 60 * 60 * 24,
                         overwrite: true,
                     };
@@ -85,11 +85,11 @@ exports.controller = {
                 defaults: { nickname, email, image },
             });
             const options = {
-                //domain: "localhost",
+                domain: "localhost",
                 path: "/",
                 httpOnly: true,
-                //secure: true,
-                //sameSite: "none",
+                secure: true,
+                sameSite: "none",
                 maxAge: 1000 * 60 * 60 * 24,
                 overwrite: true,
             };
