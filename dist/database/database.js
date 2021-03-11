@@ -14,7 +14,8 @@ const PostTag_1 = require("../models/PostTag");
 const UserTag_1 = require("../models/UserTag");
 const Answer_1 = require("../models/Answer");
 exports.sequelize = new sequelize_typescript_1.Sequelize({
-    host: process.env.HOST,
+    port: process.env.DB_PORT,
+    host: process.env.DB_HOST,
     username: process.env.USERNAME,
     password: process.env.PASSWORD,
     database: process.env.DATABASE,
