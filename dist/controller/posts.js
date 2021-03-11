@@ -123,8 +123,8 @@ exports.controller = {
         try {
             const { userId, title, body } = req.body;
             if (userId && title && body) {
-                yield Post_1.Post.create({ userId, title, body });
-                res.status(200).json({ data: null, message: "ok" });
+                const data = yield Post_1.Post.create({ userId, title, body });
+                res.status(200).json({ data: data.id, message: "ok" });
             }
             else {
                 res.status(400).json({ data: null, message: "should send full data" });

@@ -58,6 +58,14 @@ export const controller = {
       console.log(err.message)
     }
   },
+  getAllTags: async (req: Request, res: Response) => {
+    try {
+      const data = await Tag.findAll()
+      res.status(200).json({ data, message: "ok" });
+    } catch (err) {
+      console.log(err.message)
+    }
+  },
   getCount: async (req: Request, res: Response) => {
     try {
       const data = await Tag.findAll({

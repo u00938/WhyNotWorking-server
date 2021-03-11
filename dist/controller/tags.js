@@ -75,6 +75,15 @@ exports.controller = {
             console.log(err.message);
         }
     }),
+    getAllTags: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const data = yield Tag_1.Tag.findAll();
+            res.status(200).json({ data, message: "ok" });
+        }
+        catch (err) {
+            console.log(err.message);
+        }
+    }),
     getCount: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const data = yield Tag_1.Tag.findAll({

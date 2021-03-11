@@ -107,8 +107,8 @@ export const controller = {
     try {
       const { userId, title, body } = req.body;
       if (userId && title && body) {
-        await Post.create({ userId, title, body });
-        res.status(200).json({ data: null, message: "ok" })
+        const data = await Post.create({ userId, title, body });
+        res.status(200).json({ data: data.id, message: "ok" })
       } else {
         res.status(400).json({ data: null, message: "should send full data" })
       }
