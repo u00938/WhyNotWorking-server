@@ -44,7 +44,7 @@ exports.controller = {
                     if (err)
                         res.status(404).json({ data: null, message: err.message });
                     const options = {
-                        domain: "localhost",
+                        // domain: "localhost",
                         path: "/",
                         httpOnly: true,
                         secure: true,
@@ -85,7 +85,7 @@ exports.controller = {
                 defaults: { nickname, email, image },
             });
             const options = {
-                domain: "localhost",
+                // domain: "localhost",
                 path: "/",
                 httpOnly: true,
                 secure: true,

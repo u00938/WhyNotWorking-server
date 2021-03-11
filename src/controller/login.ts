@@ -35,7 +35,7 @@ export const controller = {
           , (err, token) => {
             if (err) res.status(404).json({ data: null, message: err.message })
             interface Options {
-              domain?: string,
+              // domain?: string,
               path: string;
               httpOnly: boolean;
               secure: boolean;
@@ -44,7 +44,7 @@ export const controller = {
               overwrite: boolean;
             }
             const options: any = {
-              domain: "localhost",
+              // domain: "localhost",
               path: "/",
               httpOnly: true,
               secure: true,
@@ -83,7 +83,7 @@ export const controller = {
           defaults: { nickname, email, image },
         });
         interface Options {
-          domain?: string,
+          // domain?: string,
           path: string;
           httpOnly: boolean;
           secure: boolean;
@@ -92,7 +92,7 @@ export const controller = {
           overwrite: boolean;
         }
         const options: any = {
-          domain: "localhost",
+          // domain: "localhost",
           path: "/",
           httpOnly: true,
           secure: true,
