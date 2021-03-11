@@ -33,7 +33,7 @@ app.use(helmet());
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://www.capybara25.com",
     methods: "GET, POST, PATCH, DELETE, OPTIONS",
     credentials: true
   })
