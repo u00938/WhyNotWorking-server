@@ -36,57 +36,62 @@ export const controller = {
           where: { id: req.query.user_id }
         })
         res.status(200).json({ data: data, message: "ok" });
-      } else {
-        if(req.cookies.accessToken) {
-          const token: any = req.cookies.accessToken;
-          jwt.verify(token, process.env.ACCESS_SECRET!, async (error: any, result: any) => {
-            const data = await User.findOne({ 
-              attributes: ["id", "nickname", "email", "image", "aboutMe", "location"],
-              include: [{
-                model: Tag,
-                through: { attributes: [] }
-              }],
-              where: { id: result.id }
-            })
-            res.status(200).json({ data: data, message: "ok" });          
-          })
-        } else if(req.cookies.googleOauthToken) {
-          const token: any = req.cookies.googleOauthToken;
-          const ticket = await client.verifyIdToken({
-            idToken: token,
-            audience: process.env.GOOGLE_CLIENT_ID
-          });
-          const payload: any = ticket.getPayload();
-          const myInfo = await User.findOne({
-            where: { nickname: payload.name },
-            attributes: { exclude: ["password"] },
-            include: [{
-              model: Tag,
-              through: { attributes: [] }
-            }]
-          });
-          if(myInfo) {
-            res.status(200).json({ data: myInfo, message: "ok" });
-          }
-        } 
-        // else if(req.cookies.facebookOauthToken) {
-        //   console.log(req.cookies.facebookOauthToken);
-        //   const token: any = req.cookies.facebookOauthToken;
-        //   const profile = await axios({
-        //     url: `https://graph.facebook.com/me?fields=email,first_name,last_name&access_token=${token}`,
-        //     method: "get"
-        //   })
-        //   const picture = await axios({
-        //     url: `https://graph.facebook.com/me/picture?fields=url&type=large&redirect=0&access_token=${token}`,
-        //     method: "get"
-        //   })
-        //   res.status(200).send({ data: profile.data, picture: picture.data })
-        // }
         }
       } catch (err) {
       console.log(err.message);
       }
   },
+  getMyInfo: async (req: Request, res: Response) => {
+    try {
+      if (req.cookies.accessToken) {
+        const token: any = req.cookies.accessToken;
+        jwt.verify(token, process.env.ACCESS_SECRET!, async (error: any, result: any) => {
+          const data = await User.findOne({ 
+            attributes: ["id", "nickname", "email", "image", "aboutMe", "location"],
+            include: [{
+              model: Tag,
+              through: { attributes: [] }
+            }],
+            where: { id: result.id }
+          })
+          res.status(200).json({ data: data, message: "ok" });          
+        })
+      } else if (req.cookies.googleOauthToken) {
+        const token: any = req.cookies.googleOauthToken;
+        const ticket = await client.verifyIdToken({
+          idToken: token,
+          audience: process.env.GOOGLE_CLIENT_ID
+        });
+        const payload: any = ticket.getPayload();
+        const myInfo = await User.findOne({
+          where: { nickname: payload.name },
+          attributes: { exclude: ["password"] },
+          include: [{
+            model: Tag,
+            through: { attributes: [] }
+          }]
+        });
+        if (myInfo) {
+          res.status(200).json({ data: myInfo, message: "ok" });
+        }
+      } 
+      // else if(req.cookies.facebookOauthToken) {
+      //   console.log(req.cookies.facebookOauthToken);
+      //   const token: any = req.cookies.facebookOauthToken;
+      //   const profile = await axios({
+      //     url: `https://graph.facebook.com/me?fields=email,first_name,last_name&access_token=${token}`,
+      //     method: "get"
+      //   })
+      //   const picture = await axios({
+      //     url: `https://graph.facebook.com/me/picture?fields=url&type=large&redirect=0&access_token=${token}`,
+      //     method: "get"
+      //   })
+      //   res.status(200).send({ data: profile.data, picture: picture.data })
+      // }
+    } catch (err) {
+      console.log(err.message);
+    }
+  },  
   getCount: async (req: Request, res: Response) => {
     try {
       const data = await User.findAll({

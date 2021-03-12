@@ -6,7 +6,8 @@ const upload = multer();
 
 export const users = Router()
 
-users.get('/', tokenChecker, controller.get)
-users.get('/count', tokenChecker, controller.getCount)
+users.get('/', controller.get)
+users.get('/myInfo', tokenChecker, controller.getMyInfo)
+users.get('/count', controller.getCount)
 users.post('/', controller.signUp)
 users.patch('/', [tokenChecker,upload.single("image")], controller.patch)
