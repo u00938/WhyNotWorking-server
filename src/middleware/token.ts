@@ -52,6 +52,7 @@ export const tokenChecker = async (req: Request, res: Response, next: NextFuncti
         overwrite: true,
       } as Options
       res.cookie("accessToken", newToken, options)
+      res.status(200).json({ accessToken: newToken })
       next()
     } else {
       res.status(400).json({ message: "auth error" })
