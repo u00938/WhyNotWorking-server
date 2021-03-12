@@ -128,9 +128,19 @@ export const controller = {
   },
   patch: async (req: Request, res: Response) => {
     try {
-      const { id, title, body } = req.body;
+      const { id, title, body, tags } = req.body;
       if (id && title && body) {
         await Post.update({ title, body }, { where: { id } });
+        for(let i = 0; i < tags.length; i++) {
+          const [result, created] = await Tag.findOrCreate({
+            where: { tagName: tags[i] },
+            defaults: { tagName: tags[i] }
+          });
+          await PostTag.findOrCreate({
+            where: { postId: id, tagId: result.id },
+            defaults: { postId: id, tagId: result.id }
+          });
+        }
         res.status(200).json({ data: null, message: "ok" })
       } else {
         res.status(400).json({ data: null, message: "should send full data" })

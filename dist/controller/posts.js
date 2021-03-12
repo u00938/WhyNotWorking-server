@@ -146,9 +146,19 @@ exports.controller = {
     }),
     patch: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const { id, title, body } = req.body;
+            const { id, title, body, tags } = req.body;
             if (id && title && body) {
                 yield Post_1.Post.update({ title, body }, { where: { id } });
+                for (let i = 0; i < tags.length; i++) {
+                    const [result, created] = yield Tag_1.Tag.findOrCreate({
+                        where: { tagName: tags[i] },
+                        defaults: { tagName: tags[i] }
+                    });
+                    yield PostTag_1.PostTag.findOrCreate({
+                        where: { postId: id, tagId: result.id },
+                        defaults: { postId: id, tagId: result.id }
+                    });
+                }
                 res.status(200).json({ data: null, message: "ok" });
             }
             else {
