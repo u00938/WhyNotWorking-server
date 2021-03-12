@@ -20,6 +20,7 @@ const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const database_1 = require("./database/database");
 const helmet_1 = __importDefault(require("helmet"));
+const path_1 = __importDefault(require("path"));
 const answers_1 = require("./routes/answers");
 const login_1 = require("./routes/login");
 const logout_1 = require("./routes/logout");
@@ -29,7 +30,16 @@ const tags_1 = require("./routes/tags");
 const users_1 = require("./routes/users");
 const userTags_1 = require("./routes/userTags");
 const search_1 = require("./routes/search");
-dotenv_1.default.config();
+// CLI에서 export NODE_ENV='production or development' 실행하고 작업해주세요
+if (process.env.NODE_ENV === "production") {
+    dotenv_1.default.config({ path: path_1.default.join(__dirname, "../.env.production") });
+}
+else if (process.env.NODE_ENV === "development") {
+    dotenv_1.default.config({ path: path_1.default.join(__dirname, "../.env.development") });
+}
+else {
+    throw new Error("process.env.NODE_ENV를 설정하지 않았습니다.");
+}
 const port = process.env.SERVER_PORT || 4000;
 const app = express_1.default();
 app.use(morgan_1.default("dev"));
