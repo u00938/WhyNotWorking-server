@@ -22,6 +22,11 @@ export const controller = {
         }
         const data = await User.findAll({
           attributes: ["id", "nickname", "email", "image", "location"],
+          include: [{
+            model: Tag,
+            attributes: ["tagName"],
+            through: { attributes: [] }
+          }],
           offset,
           limit: 36
         })

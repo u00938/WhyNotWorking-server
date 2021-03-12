@@ -33,6 +33,11 @@ exports.controller = {
                 }
                 const data = yield User_1.User.findAll({
                     attributes: ["id", "nickname", "email", "image", "location"],
+                    include: [{
+                            model: Tag_1.Tag,
+                            attributes: ["tagName"],
+                            through: { attributes: [] }
+                        }],
                     offset,
                     limit: 36
                 });
