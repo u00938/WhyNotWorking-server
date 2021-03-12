@@ -10,6 +10,7 @@ const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 import axios from "axios";
 import AWS from 'aws-sdk';
 import fs from 'fs';
+import { Op } from "sequelize";
 
 export const controller = {
   get: async (req: Request, res: Response) => {
@@ -184,7 +185,7 @@ export const controller = {
             const $password = await bcrypt.hash(password, salt);
             // nickname이 들어오면 중복 검증
             if(nickname) {
-              const sameNickname = await User.findOne({ where: { nickname } });
+              const sameNickname = await User.findOne({ where: { nickname, id: { [Op.ne]: result.id } } });
               if (sameNickname) {
                 res.status(400).json({ data: null, message: "Such nickname already exists" });
               } else {
@@ -272,7 +273,7 @@ export const controller = {
         else {
           // nickname이 들어오면 중복 검증
           if(nickname) {
-            const sameNickname = await User.findOne({ where: { nickname } });
+            const sameNickname = await User.findOne({ where: { nickname, id: { [Op.ne]: result.id } } });
             if (sameNickname) {
               res.status(400).json({ data: null, message: "Such nickname already exists" });
             } else {

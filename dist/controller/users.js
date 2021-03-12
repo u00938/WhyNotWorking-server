@@ -22,6 +22,7 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const google_auth_library_1 = require("google-auth-library");
 const client = new google_auth_library_1.OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const aws_sdk_1 = __importDefault(require("aws-sdk"));
+const sequelize_2 = require("sequelize");
 exports.controller = {
     get: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
@@ -205,7 +206,7 @@ exports.controller = {
                     const $password = yield bcrypt_1.default.hash(password, salt);
                     // nickname이 들어오면 중복 검증
                     if (nickname) {
-                        const sameNickname = yield User_1.User.findOne({ where: { nickname } });
+                        const sameNickname = yield User_1.User.findOne({ where: { nickname, id: { [sequelize_2.Op.ne]: result.id } } });
                         if (sameNickname) {
                             res.status(400).json({ data: null, message: "Such nickname already exists" });
                         }
@@ -286,7 +287,7 @@ exports.controller = {
                 else {
                     // nickname이 들어오면 중복 검증
                     if (nickname) {
-                        const sameNickname = yield User_1.User.findOne({ where: { nickname } });
+                        const sameNickname = yield User_1.User.findOne({ where: { nickname, id: { [sequelize_2.Op.ne]: result.id } } });
                         if (sameNickname) {
                             res.status(400).json({ data: null, message: "Such nickname already exists" });
                         }
