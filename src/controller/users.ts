@@ -49,8 +49,10 @@ export const controller = {
   },
   getMyInfo: async (req: Request, res: Response) => {
     try {
-      if (req.cookies.accessToken) {
-        const token: any = req.cookies.accessToken;
+      const authorization:any = req.headers['authorization'];
+      const tokenType = authorization.split(' ')[1];
+      const token = authorization.split(' ')[2];
+      if (tokenType === "jwt") {
         jwt.verify(token, process.env.ACCESS_SECRET!, async (error: any, result: any) => {
           const data = await User.findOne({ 
             attributes: ["id", "nickname", "email", "image", "aboutMe", "location"],
@@ -62,8 +64,7 @@ export const controller = {
           })
           res.status(200).json({ data: data, message: "ok" });          
         })
-      } else if (req.cookies.googleOauthToken) {
-        const token: any = req.cookies.googleOauthToken;
+      } else if (tokenType === "google") {
         const ticket = await client.verifyIdToken({
           idToken: token,
           audience: process.env.GOOGLE_CLIENT_ID
