@@ -53,7 +53,7 @@ exports.controller = {
                         overwrite: true,
                     };
                     res.cookie("accessToken", token, options);
-                    res.status(200).json({ data: null, message: "ok" });
+                    res.status(200).json({ data: null, accessToken: token, message: "ok" });
                 });
             }
         }

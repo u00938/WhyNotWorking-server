@@ -4,9 +4,9 @@ import { tokenChecker } from "../middleware/token"
 
 export const tags = Router()
 
-tags.get('/', tokenChecker, controller.get)
-tags.get('/allTags', tokenChecker, controller.getAllTags)
-tags.get('/count', tokenChecker, controller.getCount)
-tags.get('/getTags', tokenChecker, controller.getTags)
+tags.get('/', controller.get)
+tags.get('/allTags', controller.getAllTags)
+tags.get('/count', controller.getCount)
+tags.get('/getTags', controller.getTags)
 tags.post('/', tokenChecker, controller.post)
 tags.delete('/', tokenChecker, controller.delete)
