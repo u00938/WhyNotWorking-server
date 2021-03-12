@@ -19,8 +19,8 @@ interface Options {
   // domain?: string,
   path: string;
   httpOnly: boolean;
-  secure: boolean;
-  sameSite: string;
+  // secure: boolean;
+  // sameSite: string;
   maxAge: number;
   overwrite: boolean;
 }
