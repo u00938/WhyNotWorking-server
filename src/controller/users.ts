@@ -118,6 +118,7 @@ export const controller = {
         if (!email || !password || !nickname) {
           res.status(400).json({ data: null, message: "should send full data" });
         } else {
+          if(req.file !== undefined) {
             const s3 = new AWS.S3({
               accessKeyId: process.env.AWS_ACCESS_KEY,
               secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
@@ -127,7 +128,7 @@ export const controller = {
               Key:
                 "image/" + nickname + "profile" + new Date().getTime() + ".jpg",
               ACL: "public-read",
-              Body: fs.createReadStream(__dirname + "/../../1.jpeg")
+              Body: req.file.buffer
             };
             s3.upload(param, async function (err:any, data:any) {
               const userData = await User.create({ email, password: $password, nickname, location, aboutMe, image: data.Location });
@@ -145,6 +146,22 @@ export const controller = {
               }
               res.status(200).json({ data: null, message: "ok" });
             });
+          } else {
+            const userData = await User.create({ email, password: $password, nickname, location, aboutMe });
+            if(tags) {
+              for(let i = 0; i < tags.length; i++) {
+                const [result, created] = await Tag.findOrCreate({
+                  where: { tagName: tags[i] },
+                  defaults: { tagName: tags[i] }
+                });
+                await UserTag.findOrCreate({
+                  where: { userId: userData.id, tagId: result.id },
+                  defaults: { userId: userData.id, tagId: result.id }
+                });
+              }
+            }
+            res.status(200).json({ data: null, message: "ok" });
+          }
         }
       }
     } catch (err) {
@@ -155,7 +172,7 @@ export const controller = {
     try {
       const token = req.cookies.accessToken;
       jwt.verify(token, process.env.ACCESS_SECRET!, async (error: any, result: any) => {
-        const { nickname, password, image, aboutMe, location } = req.body;
+        const { nickname, password, image, aboutMe, location, tags } = req.body;
         // password가 있는 경우
           if(password) {
             const salt = await bcrypt.genSalt();
@@ -166,19 +183,85 @@ export const controller = {
               if (sameNickname) {
                 res.status(400).json({ data: null, message: "Such nickname already exists" });
               } else {
-                await User.update(
-                  { nickname, password: $password, image, aboutMe, location },
-                  { where: { id: result.id } }
-                );
-                res.status(200).json({ data: null, message: "ok" });
+                if(req.file !== undefined) {
+                  const s3 = new AWS.S3({
+                    accessKeyId: process.env.AWS_ACCESS_KEY,
+                    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+                  });
+                  const param = {
+                    Bucket: "whynotworking",
+                    Key:
+                      "image/" + result.nickname + "profile" + new Date().getTime() + ".jpg",
+                    ACL: "public-read",
+                    Body: req.file.buffer
+                  };
+                  s3.upload(param, async function (err:any, data:any) {
+                    await User.update(
+                      { nickname, password: $password, image: data.Location, aboutMe, location },
+                      { where: { id: result.id } }
+                    );
+                    if(tags) {
+                      for(let i = 0; i < tags.length; i++) {
+                        const [result2, created] = await Tag.findOrCreate({
+                          where: { tagName: tags[i] },
+                          defaults: { tagName: tags[i] }
+                        });
+                        await UserTag.findOrCreate({
+                          where: { userId: result.id, tagId: result2.id },
+                          defaults: { userId: result.id, tagId: result2.id }
+                        });
+                      }
+                    }
+                    res.status(200).json({ data: null, message: "ok" });
+                  });
+                } else {
+                  await User.update(
+                    { nickname, password: $password, aboutMe, location },
+                    { where: { id: result.id } }
+                  );
+                  res.status(200).json({ data: null, message: "ok" });
+                }
               }
             }
             // nickname이 안들어올 경우
-            await User.update(
-              { password: $password, image, aboutMe, location },
-              { where: { id: result.id } }
-            );
-            res.status(200).json({ data: null, message: "ok" });
+            if(req.file !== undefined) {
+              const s3 = new AWS.S3({
+                accessKeyId: process.env.AWS_ACCESS_KEY,
+                secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+              });
+              const param = {
+                Bucket: "whynotworking",
+                Key:
+                  "image/" + result.nickname + "profile" + new Date().getTime() + ".jpg",
+                ACL: "public-read",
+                Body: req.file.buffer
+              };
+              s3.upload(param, async function (err:any, data:any) {
+                await User.update(
+                  { password: $password, image: data.Location, aboutMe, location },
+                  { where: { id: result.id } }
+                );
+                if(tags) {
+                  for(let i = 0; i < tags.length; i++) {
+                    const [result2, created] = await Tag.findOrCreate({
+                      where: { tagName: tags[i] },
+                      defaults: { tagName: tags[i] }
+                    });
+                    await UserTag.findOrCreate({
+                      where: { userId: result.id, tagId: result2.id },
+                      defaults: { userId: result.id, tagId: result2.id }
+                    });
+                  }
+                }
+                res.status(200).json({ data: null, message: "ok" });
+              });
+            } else {
+              await User.update(
+                { password: $password, aboutMe, location },
+                { where: { id: result.id } }
+              );
+              res.status(200).json({ data: null, message: "ok" });
+            }
         } 
         // password가 없는 경우
         else {
@@ -189,18 +272,84 @@ export const controller = {
               res.status(400).json({ data: null, message: "Such nickname already exists" });
             } else {
               // nickname이 안들어올 경우
+              if(req.file !== undefined) {
+                const s3 = new AWS.S3({
+                  accessKeyId: process.env.AWS_ACCESS_KEY,
+                  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+                });
+                const param = {
+                  Bucket: "whynotworking",
+                  Key:
+                    "image/" + result.nickname + "profile" + new Date().getTime() + ".jpg",
+                  ACL: "public-read",
+                  Body: req.file.buffer
+                };
+                s3.upload(param, async function (err:any, data:any) {
+                  await User.update(
+                    { nickname, image: data.Location, aboutMe, location },
+                    { where: { id : result.id } }
+                  );
+                  if(tags) {
+                    for(let i = 0; i < tags.length; i++) {
+                      const [result2, created] = await Tag.findOrCreate({
+                        where: { tagName: tags[i] },
+                        defaults: { tagName: tags[i] }
+                      });
+                      await UserTag.findOrCreate({
+                        where: { userId: result.id, tagId: result2.id },
+                        defaults: { userId: result.id, tagId: result2.id }
+                      });
+                    }
+                  }
+                  res.status(200).json({ data: null, message: "ok" });
+                });
+              } else {
+                await User.update(
+                  { nickname, aboutMe, location },
+                  { where: { id : result.id } }
+                );
+                res.status(200).json({ data: null, message: "ok" })
+              }
+            }
+          } else {
+            if(req.file !== undefined) {
+              const s3 = new AWS.S3({
+                accessKeyId: process.env.AWS_ACCESS_KEY,
+                secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+              });
+              const param = {
+                Bucket: "whynotworking",
+                Key:
+                  "image/" + result.nickname + "profile" + new Date().getTime() + ".jpg",
+                ACL: "public-read",
+                Body: req.file.buffer
+              };
+              s3.upload(param, async function (err:any, data:any) {
+                await User.update(
+                  { image: data.Location, aboutMe, location },
+                  { where: { id : result.id } }
+                );
+                if(tags) {
+                  for(let i = 0; i < tags.length; i++) {
+                    const [result2, created] = await Tag.findOrCreate({
+                      where: { tagName: tags[i] },
+                      defaults: { tagName: tags[i] }
+                    });
+                    await UserTag.findOrCreate({
+                      where: { userId: result.id, tagId: result2.id },
+                      defaults: { userId: result.id, tagId: result2.id }
+                    });
+                  }
+                }
+                res.status(200).json({ data: null, message: "ok" });
+              });
+            } else {
               await User.update(
-                { nickname, image, aboutMe, location },
+                { aboutMe, location },
                 { where: { id : result.id } }
               );
               res.status(200).json({ data: null, message: "ok" })
             }
-          } else {
-            await User.update(
-              { image, aboutMe, location },
-              { where: { id : result.id } }
-            );
-            res.status(200).json({ data: null, message: "ok" })
           }
         }
       });
