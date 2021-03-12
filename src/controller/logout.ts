@@ -17,8 +17,8 @@ export const controller = {
                 //domain: "localhost",
                 path: "/",
                 httpOnly: true,
-                secure: true,
-                sameSite: "none",
+                secure: process.env.COOKIE_SECURE,
+                sameSite: process.env.COOKIE_SAMESITE,
                 maxAge: 1000 * 60 * 60 * 24,
                 overwrite: true,
               })
@@ -45,8 +45,8 @@ export const controller = {
             //domain: "localhost",
             path: "/",
             httpOnly: true,
-            secure: true,
-            sameSite: "none",
+            secure: process.env.COOKIE_SECURE || false,
+            sameSite: process.env.COOKIE_SAMESITE || "Lax",
             maxAge: 1000 * 60 * 60 * 24,
             overwrite: true,
           } as Options

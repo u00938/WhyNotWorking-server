@@ -47,7 +47,7 @@ app.use(cookie_parser_1.default());
 app.use(body_parser_1.json());
 app.use(helmet_1.default());
 app.use(cors_1.default({
-    origin: "https://www.capybara25.com",
+    origin: process.env.CORS_ORIGIN,
     methods: "GET, POST, PATCH, DELETE, OPTIONS",
     credentials: true
 }));

@@ -6,7 +6,7 @@ export const posts = Router()
 
 posts.get('/', tokenChecker, controller.get)
 posts.get('/count', tokenChecker, controller.getCount)
-posts.get('/title', tokenChecker, controller.getTitle)
+posts.get('/title', controller.getTitle)
 posts.post('/', tokenChecker, controller.post)
 posts.patch('/', tokenChecker, controller.patch)
 posts.delete('/', tokenChecker, controller.delete)

@@ -41,7 +41,7 @@ app.use(helmet());
 
 app.use(
   cors({
-    origin: "https://www.capybara25.com",
+    origin: process.env.CORS_ORIGIN,
     methods: "GET, POST, PATCH, DELETE, OPTIONS",
     credentials: true
   })
