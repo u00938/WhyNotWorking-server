@@ -172,7 +172,7 @@ exports.controller = {
                         });
                     }
                     else {
-                        const userData = yield User_1.User.create({ email, password: $password, nickname, location, aboutMe });
+                        const userData = yield User_1.User.create({ email, password: $password, nickname, image: "https://i.imgur.com/lqGXdm7.png", location, aboutMe });
                         if (tags) {
                             for (let i = 0; i < tags.length; i++) {
                                 const [result, created] = yield Tag_1.Tag.findOrCreate({
