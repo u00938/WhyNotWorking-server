@@ -152,7 +152,7 @@ export const controller = {
               res.status(200).json({ data: null, message: "ok" });
             });
           } else {
-            const userData = await User.create({ email, password: $password, nickname, location, aboutMe });
+            const userData = await User.create({ email, password: $password, nickname, image: "https://i.imgur.com/lqGXdm7.png", location, aboutMe });
             if(tags) {
               for(let i = 0; i < tags.length; i++) {
                 const [result, created] = await Tag.findOrCreate({
