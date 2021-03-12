@@ -62,8 +62,10 @@ exports.controller = {
     }),
     getMyInfo: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            if (req.cookies.accessToken) {
-                const token = req.cookies.accessToken;
+            const authorization = req.headers['authorization'];
+            const tokenType = authorization.split(' ')[1];
+            const token = authorization.split(' ')[2];
+            if (tokenType === "jwt") {
                 jsonwebtoken_1.default.verify(token, process.env.ACCESS_SECRET, (error, result) => __awaiter(void 0, void 0, void 0, function* () {
                     const data = yield User_1.User.findOne({
                         attributes: ["id", "nickname", "email", "image", "aboutMe", "location"],
@@ -76,8 +78,7 @@ exports.controller = {
                     res.status(200).json({ data: data, message: "ok" });
                 }));
             }
-            else if (req.cookies.googleOauthToken) {
-                const token = req.cookies.googleOauthToken;
+            else if (tokenType === "google") {
                 const ticket = yield client.verifyIdToken({
                     idToken: token,
                     audience: process.env.GOOGLE_CLIENT_ID

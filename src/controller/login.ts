@@ -53,7 +53,7 @@ export const controller = {
               overwrite: true,
             } as Options
             res.cookie("accessToken", token, options)
-            res.status(200).json({ data: null, message: "ok" })
+            res.status(200).json({ data: null, accessToken: `jwt ${token}` , message: "ok" })
           }
           );
       }
@@ -101,8 +101,7 @@ export const controller = {
           overwrite: true,
         } as Options
         res.cookie("googleOauthToken", token, options);
-        console.log(result)
-        res.status(200).json({ data: result, message: "ok" });
+        res.status(200).json({ data: result, accessToken: `google ${token}`, message: "ok" });
       })
       .catch(console.error);
   },
