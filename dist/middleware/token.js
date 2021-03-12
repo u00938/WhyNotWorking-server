@@ -42,7 +42,6 @@ const tokenChecker = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
                 overwrite: true,
             };
             res.cookie("accessToken", newToken, options);
-            res.status(200).json({ accessToken: newToken });
             next();
         }
         else {

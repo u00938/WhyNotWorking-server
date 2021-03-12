@@ -53,7 +53,7 @@ export const controller = {
               overwrite: true,
             } as Options
             res.cookie("accessToken", token, options)
-            res.status(200).json({ data: null, accessToken: token, message: "ok" })
+            res.status(200).json({ data: null, message: "ok" })
           }
           );
       }
