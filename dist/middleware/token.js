@@ -27,6 +27,7 @@ const generateToken = (payload) => {
 const tokenChecker = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const token = req.cookies.accessToken;
+        const githubToken = req.cookies.githubOauthToken;
         if (token) {
             const payload = yield jsonwebtoken_1.default.verify(token, process.env.ACCESS_SECRET);
             delete payload.iat;
@@ -42,6 +43,9 @@ const tokenChecker = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
                 overwrite: true,
             };
             res.cookie("accessToken", newToken, options);
+            next();
+        }
+        else if (githubToken) {
             next();
         }
         else {

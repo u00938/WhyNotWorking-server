@@ -81,7 +81,20 @@ export const controller = {
         if (myInfo) {
           res.status(200).json({ data: myInfo, message: "ok" });
         }
-      } 
+      } else if (tokenType === "github") {
+        const nickname = req.query;
+        const myInfo = await User.findOne({
+          where: { nickname },
+          attributes: { exclude: ["password"] },
+          include: [{
+            model: Tag,
+            through: { attributes: [] }
+          }]
+        });
+        if (myInfo) {
+          res.status(200).json({ data: myInfo, message: "ok" });
+        }
+      }
       // else if(req.cookies.facebookOauthToken) {
       //   console.log(req.cookies.facebookOauthToken);
       //   const token: any = req.cookies.facebookOauthToken;

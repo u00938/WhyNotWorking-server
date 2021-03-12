@@ -107,7 +107,18 @@ exports.controller = {
             if (code) {
                 yield axios_1.default.post(url, { client_id, client_secret, code }, { headers: { accept: "application/json" } })
                     .then((result) => {
-                    res.status(200).json({ accessToken: result.data.access_token });
+                    const token = result.data.access_token;
+                    const options = {
+                        // domain: "localhost",
+                        path: "/",
+                        httpOnly: true,
+                        secure: process.env.COOKIE_SECURE || false,
+                        sameSite: process.env.COOKIE_SAMESITE || "Lax",
+                        maxAge: 1000 * 60 * 60 * 24,
+                        overwrite: true,
+                    };
+                    res.cookie("githubOauthToken", token, options);
+                    res.status(200).json({ data: null, accessToken: `Bearer github ${token}`, message: "ok" });
                 });
             }
             else {
@@ -118,6 +129,14 @@ exports.controller = {
             console.log(err.message);
         }
     }),
+    githubSign: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { email, nickname, location, image } = req.body;
+        yield User_1.User.findOrCreate({
+            where: { email },
+            defaults: { email, nickname, location, image },
+        });
+        res.status(200).json({ data: null, message: "ok" });
+    })
     // facebookLogin: async (req: Request, res: Response) => {
     //   try {
     //     async function getAccessTokenFromCode(code:any) {

@@ -37,6 +37,7 @@ interface UserPayload {
 export const tokenChecker = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const token = req.cookies.accessToken;
+    const githubToken = req.cookies.githubOauthToken;
     if (token) {
       const payload = await jwt.verify(token, process.env.ACCESS_SECRET!) as UserPayload
       delete payload.iat;
@@ -52,6 +53,8 @@ export const tokenChecker = async (req: Request, res: Response, next: NextFuncti
         overwrite: true,
       } as Options
       res.cookie("accessToken", newToken, options)
+      next()
+    } else if (githubToken) {
       next()
     } else {
       res.status(400).json({ message: "auth error" })
