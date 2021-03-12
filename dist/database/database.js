@@ -6,7 +6,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.sequelize = void 0;
 const sequelize_typescript_1 = require("sequelize-typescript");
 const dotenv_1 = __importDefault(require("dotenv"));
-dotenv_1.default.config();
+const path_1 = __importDefault(require("path"));
+// CLI에서 export NODE_ENV='production or development' 실행하고 작업해주세요
+if (process.env.NODE_ENV === "production") {
+    dotenv_1.default.config({ path: path_1.default.join(__dirname, "../../.env.production") });
+}
+else if (process.env.NODE_ENV === "development") {
+    dotenv_1.default.config({ path: path_1.default.join(__dirname, "../../.env.development") });
+}
+else {
+    throw new Error("process.env.NODE_ENV를 설정하지 않았습니다.");
+}
 const User_1 = require("../models/User");
 const Post_1 = require("../models/Post");
 const Tag_1 = require("../models/Tag");

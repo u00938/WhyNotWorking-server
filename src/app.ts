@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import { sequelize } from "./database/database";
 import helmet from "helmet";
+import path from "path";
 
 import * as multer from 'multer';
 import * as multerS3 from 'multer-s3';
@@ -20,7 +21,14 @@ import { users } from "./routes/users";
 import { userTags } from "./routes/userTags";
 import { search } from "./routes/search";
 
-dotenv.config();
+// CLI에서 export NODE_ENV='production or development' 실행하고 작업해주세요
+if (process.env.NODE_ENV === "production") {
+  dotenv.config({ path: path.join(__dirname, "../.env.production") });
+} else if (process.env.NODE_ENV === "development") {
+  dotenv.config({ path: path.join(__dirname, "../.env.development") });
+} else {
+  throw new Error("process.env.NODE_ENV를 설정하지 않았습니다.");
+}
 
 const port = process.env.SERVER_PORT || 4000;
 

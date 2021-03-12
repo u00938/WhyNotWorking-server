@@ -1,7 +1,15 @@
 import { Sequelize } from 'sequelize-typescript';
 import dotenv from 'dotenv';
+import path from "path";
 
-dotenv.config();
+// CLI에서 export NODE_ENV='production or development' 실행하고 작업해주세요
+if (process.env.NODE_ENV === "production") {
+  dotenv.config({ path: path.join(__dirname, "../../.env.production") });
+} else if (process.env.NODE_ENV === "development") {
+  dotenv.config({ path: path.join(__dirname, "../../.env.development") });
+} else {
+  throw new Error("process.env.NODE_ENV를 설정하지 않았습니다.");
+}
 
 import { User } from "../models/User";
 import { Post } from "../models/Post";
