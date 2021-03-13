@@ -65,7 +65,7 @@ exports.controller = {
             const authorization = req.headers['authorization'];
             const tokenType = authorization.split(' ')[1];
             const token = authorization.split(' ')[2];
-            if (tokenType === "jwt") {
+            if (tokenType === "jwt" || tokenType === "github") {
                 jsonwebtoken_1.default.verify(token, process.env.ACCESS_SECRET, (error, result) => __awaiter(void 0, void 0, void 0, function* () {
                     const data = yield User_1.User.findOne({
                         attributes: { exclude: ["password"] },
@@ -86,20 +86,6 @@ exports.controller = {
                 const payload = ticket.getPayload();
                 const myInfo = yield User_1.User.findOne({
                     where: { nickname: payload.name },
-                    attributes: { exclude: ["password"] },
-                    include: [{
-                            model: Tag_1.Tag,
-                            through: { attributes: [] }
-                        }]
-                });
-                if (myInfo) {
-                    res.status(200).json({ data: myInfo, message: "ok" });
-                }
-            }
-            else if (tokenType === "github") {
-                const nickname = req.query;
-                const myInfo = yield User_1.User.findOne({
-                    where: { nickname },
                     attributes: { exclude: ["password"] },
                     include: [{
                             model: Tag_1.Tag,

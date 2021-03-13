@@ -52,7 +52,7 @@ export const controller = {
       const authorization:any = req.headers['authorization'];
       const tokenType = authorization.split(' ')[1];
       const token = authorization.split(' ')[2];
-      if (tokenType === "jwt") {
+      if (tokenType === "jwt" || tokenType === "github") {
         jwt.verify(token, process.env.ACCESS_SECRET!, async (error: any, result: any) => {
           const data = await User.findOne({ 
             attributes: { exclude: ["password"] },
@@ -81,20 +81,7 @@ export const controller = {
         if (myInfo) {
           res.status(200).json({ data: myInfo, message: "ok" });
         }
-      } else if (tokenType === "github") {
-        const nickname = req.query;
-        const myInfo = await User.findOne({
-          where: { nickname },
-          attributes: { exclude: ["password"] },
-          include: [{
-            model: Tag,
-            through: { attributes: [] }
-          }]
-        });
-        if (myInfo) {
-          res.status(200).json({ data: myInfo, message: "ok" });
-        }
-      }
+      } 
       // else if(req.cookies.facebookOauthToken) {
       //   console.log(req.cookies.facebookOauthToken);
       //   const token: any = req.cookies.facebookOauthToken;
