@@ -54,8 +54,6 @@ export const tokenChecker = async (req: Request, res: Response, next: NextFuncti
       } as Options
       res.cookie("accessToken", newToken, options)
       next()
-    } else if (githubToken) {
-      next()
     } else {
       res.status(400).json({ message: "auth error" })
     }

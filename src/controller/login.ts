@@ -105,7 +105,7 @@ export const controller = {
       })
       .catch(console.error);
   },
-  githubLogin: async (req: Request, res: Response) => {
+  githubToken: async (req: Request, res: Response) => {
     try {
       const client_id = process.env.GITHUB_CLIENT_ID;
       const client_secret = process.env.GITHUB_CLIENT_SECRET;
@@ -125,7 +125,7 @@ export const controller = {
             overwrite: true,
           } 
           res.cookie("githubOauthToken", token, options);
-          res.status(200).json({ data: null, accessToken: `Bearer github ${token}`, message: "ok" })
+          res.status(200).json({ data: null, accessToken: token, message: "ok" })
         })
       } else {
         res.status(400).json({ data: null, message: "should send authorization code" })
@@ -134,13 +134,35 @@ export const controller = {
       console.log(err.message);
     }
   },
-  githubSign: async (req: Request, res: Response) => {
+  githubLogin: async (req: Request, res: Response) => {
     const { email, nickname, location, image } = req.body;
-    await User.findOrCreate({
-      where: { email },
-      defaults: { email, nickname, location, image },
+    const [result] = await User.findOrCreate({
+      where: { email: nickname + '@github.com' },
+      defaults: { email: nickname + '@github.com', nickname: email, location, image },
     });
-    res.status(200).json({ data: null, message: "ok" })
+    const payload = {
+      id: result.id,
+      email: result.email,
+      nickname: result.nickname
+    }
+    jwt.sign(
+      payload, 
+      process.env.ACCESS_SECRET!, 
+      { expiresIn: "1d" }
+      , (err, token) => {
+        if (err) res.status(404).json({ data: null, message: err.message })
+        const options: any = {
+          // domain: "localhost",
+          path: "/",
+          httpOnly: true,
+          secure: process.env.COOKIE_SECURE || false,
+          sameSite: process.env.COOKIE_SAMESITE || "Lax",
+          maxAge: 1000 * 60 * 60 * 24,
+          overwrite: true,
+        } 
+        res.cookie("accessToken", token, options)
+        res.status(200).json({ data: null, accessToken: `Bearer github ${token}`, message: "ok" })
+      });
   }
   // facebookLogin: async (req: Request, res: Response) => {
   //   try {
