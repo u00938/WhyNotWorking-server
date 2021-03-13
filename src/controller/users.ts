@@ -50,9 +50,7 @@ export const controller = {
   getMyInfo: async (req: Request, res: Response) => {
     try {
       const authorization:any = req.headers['authorization'];
-      const tokenType = authorization.split(' ')[1];
-      const token = authorization.split(' ')[2];
-      if (tokenType === "jwt" || tokenType === "github") {
+      const token = authorization.split(' ')[1];
         jwt.verify(token, process.env.ACCESS_SECRET!, async (error: any, result: any) => {
           const data = await User.findOne({ 
             attributes: { exclude: ["password"] },
@@ -63,25 +61,7 @@ export const controller = {
             where: { id: result.id }
           })
           res.status(200).json({ data: data, message: "ok" });          
-        })
-      } else if (tokenType === "google") {
-        const ticket = await client.verifyIdToken({
-          idToken: token,
-          audience: process.env.GOOGLE_CLIENT_ID
         });
-        const payload: any = ticket.getPayload();
-        const myInfo = await User.findOne({
-          where: { nickname: payload.name },
-          attributes: { exclude: ["password"] },
-          include: [{
-            model: Tag,
-            through: { attributes: [] }
-          }]
-        });
-        if (myInfo) {
-          res.status(200).json({ data: myInfo, message: "ok" });
-        }
-      } 
       // else if(req.cookies.facebookOauthToken) {
       //   console.log(req.cookies.facebookOauthToken);
       //   const token: any = req.cookies.facebookOauthToken;

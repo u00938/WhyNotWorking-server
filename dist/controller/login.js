@@ -53,7 +53,7 @@ exports.controller = {
                         overwrite: true,
                     };
                     res.cookie("accessToken", token, options);
-                    res.status(200).json({ data: null, accessToken: `Bearer jwt ${token}`, message: "ok" });
+                    res.status(200).json({ data: null, accessToken: `Bearer ${token}`, message: "ok" });
                 });
             }
         }
@@ -84,17 +84,26 @@ exports.controller = {
                 where: { email, nickname },
                 defaults: { nickname, email, image },
             });
-            const options = {
-                // domain: "localhost",
-                path: "/",
-                httpOnly: true,
-                secure: process.env.COOKIE_SECURE || false,
-                sameSite: process.env.COOKIE_SAMESITE || "Lax",
-                maxAge: 1000 * 60 * 60 * 24,
-                overwrite: true,
+            const payload = {
+                id: result.id,
+                email: result.email,
+                nickname: result.nickname
             };
-            res.cookie("googleOauthToken", token, options);
-            res.status(200).json({ data: result, accessToken: `Bearer google ${token}`, message: "ok" });
+            jsonwebtoken_1.default.sign(payload, process.env.ACCESS_SECRET, { expiresIn: "1d" }, (err, token) => {
+                if (err)
+                    res.status(404).json({ data: null, message: err.message });
+                const options = {
+                    // domain: "localhost",
+                    path: "/",
+                    httpOnly: true,
+                    secure: process.env.COOKIE_SECURE || false,
+                    sameSite: process.env.COOKIE_SAMESITE || "Lax",
+                    maxAge: 1000 * 60 * 60 * 24,
+                    overwrite: true,
+                };
+                res.cookie("accessToken", token, options);
+                res.status(200).json({ data: result, accessToken: `Bearer ${token}`, message: "ok" });
+            });
         }))
             .catch(console.error);
     },
@@ -108,16 +117,6 @@ exports.controller = {
                 yield axios_1.default.post(url, { client_id, client_secret, code }, { headers: { accept: "application/json" } })
                     .then((result) => {
                     const token = result.data.access_token;
-                    const options = {
-                        // domain: "localhost",
-                        path: "/",
-                        httpOnly: true,
-                        secure: process.env.COOKIE_SECURE || false,
-                        sameSite: process.env.COOKIE_SAMESITE || "Lax",
-                        maxAge: 1000 * 60 * 60 * 24,
-                        overwrite: true,
-                    };
-                    res.cookie("githubOauthToken", token, options);
                     res.status(200).json({ data: null, accessToken: token, message: "ok" });
                 });
             }
@@ -153,7 +152,7 @@ exports.controller = {
                 overwrite: true,
             };
             res.cookie("accessToken", token, options);
-            res.status(200).json({ data: null, accessToken: `Bearer github ${token}`, message: "ok" });
+            res.status(200).json({ data: null, accessToken: `Bearer ${token}`, message: "ok" });
         });
     })
     // facebookLogin: async (req: Request, res: Response) => {
