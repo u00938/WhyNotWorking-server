@@ -217,13 +217,21 @@ exports.controller = {
                                                 });
                                             }
                                         }
-                                        res.status(200).json({ data: null, message: "ok" });
+                                        const userData = yield User_1.User.findOne({
+                                            attributes: { exclude: ["password"] },
+                                            where: { id: result.id }
+                                        });
+                                        res.status(200).json({ data: userData, message: "ok" });
                                     });
                                 });
                             }
                             else {
                                 yield User_1.User.update({ nickname, password: $password, aboutMe, location }, { where: { id: result.id } });
-                                res.status(200).json({ data: null, message: "ok" });
+                                const userData = yield User_1.User.findOne({
+                                    attributes: { exclude: ["password"] },
+                                    where: { id: result.id }
+                                });
+                                res.status(200).json({ data: userData, message: "ok" });
                             }
                         }
                     }
@@ -254,13 +262,21 @@ exports.controller = {
                                         });
                                     }
                                 }
-                                res.status(200).json({ data: null, message: "ok" });
+                                const userData = yield User_1.User.findOne({
+                                    attributes: { exclude: ["password"] },
+                                    where: { id: result.id }
+                                });
+                                res.status(200).json({ data: userData, message: "ok" });
                             });
                         });
                     }
                     else {
                         yield User_1.User.update({ password: $password, aboutMe, location }, { where: { id: result.id } });
-                        res.status(200).json({ data: null, message: "ok" });
+                        const userData = yield User_1.User.findOne({
+                            attributes: { exclude: ["password"] },
+                            where: { id: result.id }
+                        });
+                        res.status(200).json({ data: userData, message: "ok" });
                     }
                 }
                 // password가 없는 경우
@@ -299,13 +315,21 @@ exports.controller = {
                                                 });
                                             }
                                         }
-                                        res.status(200).json({ data: null, message: "ok" });
+                                        const userData = yield User_1.User.findOne({
+                                            attributes: { exclude: ["password"] },
+                                            where: { id: result.id }
+                                        });
+                                        res.status(200).json({ data: userData, message: "ok" });
                                     });
                                 });
                             }
                             else {
                                 yield User_1.User.update({ nickname, aboutMe, location }, { where: { id: result.id } });
-                                res.status(200).json({ data: null, message: "ok" });
+                                const userData = yield User_1.User.findOne({
+                                    attributes: { exclude: ["password"] },
+                                    where: { id: result.id }
+                                });
+                                res.status(200).json({ data: userData, message: "ok" });
                             }
                         }
                     }
@@ -336,13 +360,21 @@ exports.controller = {
                                             });
                                         }
                                     }
-                                    res.status(200).json({ data: null, message: "ok" });
+                                    const userData = yield User_1.User.findOne({
+                                        attributes: { exclude: ["password"] },
+                                        where: { id: result.id }
+                                    });
+                                    res.status(200).json({ data: userData, message: "ok" });
                                 });
                             });
                         }
                         else {
                             yield User_1.User.update({ aboutMe, location }, { where: { id: result.id } });
-                            res.status(200).json({ data: null, message: "ok" });
+                            const userData = yield User_1.User.findOne({
+                                attributes: { exclude: ["password"] },
+                                where: { id: result.id }
+                            });
+                            res.status(200).json({ data: userData, message: "ok" });
                         }
                     }
                 }
