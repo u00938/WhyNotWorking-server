@@ -159,66 +159,16 @@ export const controller = {
     try {
       const token = req.cookies.accessToken;
       jwt.verify(token, process.env.ACCESS_SECRET!, async (error: any, result: any) => {
-        const { nickname, password, image, aboutMe, location, tags } = req.body;
-        // password가 있는 경우
-          if(password) {
+        let { nickname, password, image, aboutMe, location, tags } = req.body;
+        if(password) {
             const salt = await bcrypt.genSalt();
-            const $password = await bcrypt.hash(password, salt);
-            // nickname이 들어오면 중복 검증
-            if(nickname) {
-              const sameNickname = await User.findOne({ where: { nickname, id: { [Op.ne]: result.id } } });
-              if (sameNickname) {
-                res.status(400).json({ data: null, message: "Such nickname already exists" });
-              } else {
-                if(req.file !== undefined) {
-                  const s3 = new AWS.S3({
-                    accessKeyId: process.env.AWS_ACCESS_KEY,
-                    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
-                  });
-                  const param = {
-                    Bucket: "whynotworking",
-                    Key:
-                      "image/" + result.nickname + "profile" + new Date().getTime() + ".jpg",
-                    ACL: "public-read",
-                    Body: req.file.buffer
-                  };
-                  s3.upload(param, async function (err:any, data:any) {
-                    await User.update(
-                      { nickname, password: $password, image: data.Location, aboutMe, location },
-                      { where: { id: result.id } }
-                    );
-                    if(tags) {
-                      for(let i = 0; i < tags.length; i++) {
-                        const [result2, created] = await Tag.findOrCreate({
-                          where: { tagName: tags[i] },
-                          defaults: { tagName: tags[i] }
-                        });
-                        await UserTag.findOrCreate({
-                          where: { userId: result.id, tagId: result2.id },
-                          defaults: { userId: result.id, tagId: result2.id }
-                        });
-                      }
-                    }
-                    const userData = await User.findOne({ 
-                      attributes: { exclude: ["password"] },
-                      where: { id: result.id } 
-                    });
-                    res.status(200).json({ data: userData, message: "ok" });
-                  });
-                } else {
-                  await User.update(
-                    { nickname, password: $password, aboutMe, location },
-                    { where: { id: result.id } }
-                  );
-                  const userData = await User.findOne({ 
-                    attributes: { exclude: ["password"] },
-                    where: { id: result.id } 
-                  });
-                  res.status(200).json({ data: userData, message: "ok" });
-                }
-              }
-            }
-            // nickname이 안들어올 경우
+            password = await bcrypt.hash(password, salt);
+        } 
+        if(nickname) {
+          const sameNickname = await User.findOne({ where: { nickname, id: { [Op.ne]: result.id } } });
+          if(sameNickname) {
+            res.status(400).json({ data: null, message: "Such nickname already exists" });
+          } else {
             if(req.file !== undefined) {
               const s3 = new AWS.S3({
                 accessKeyId: process.env.AWS_ACCESS_KEY,
@@ -233,7 +183,7 @@ export const controller = {
               };
               s3.upload(param, async function (err:any, data:any) {
                 await User.update(
-                  { password: $password, image: data.Location, aboutMe, location },
+                  { nickname, password, image: data.Location, aboutMe, location },
                   { where: { id: result.id } }
                 );
                 if(tags) {
@@ -256,7 +206,7 @@ export const controller = {
               });
             } else {
               await User.update(
-                { password: $password, aboutMe, location },
+                { nickname, password, aboutMe, location },
                 { where: { id: result.id } }
               );
               const userData = await User.findOne({ 
@@ -265,115 +215,58 @@ export const controller = {
               });
               res.status(200).json({ data: userData, message: "ok" });
             }
-        } 
-        // password가 없는 경우
-        else {
-          // nickname이 들어오면 중복 검증
-          if(nickname) {
-            const sameNickname = await User.findOne({ where: { nickname, id: { [Op.ne]: result.id } } });
-            if (sameNickname) {
-              res.status(400).json({ data: null, message: "Such nickname already exists" });
-            } else {
-              // nickname이 안들어올 경우
-              if(req.file !== undefined) {
-                const s3 = new AWS.S3({
-                  accessKeyId: process.env.AWS_ACCESS_KEY,
-                  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
-                });
-                const param = {
-                  Bucket: "whynotworking",
-                  Key:
-                    "image/" + result.nickname + "profile" + new Date().getTime() + ".jpg",
-                  ACL: "public-read",
-                  Body: req.file.buffer
-                };
-                s3.upload(param, async function (err:any, data:any) {
-                  await User.update(
-                    { nickname, image: data.Location, aboutMe, location },
-                    { where: { id : result.id } }
-                  );
-                  if(tags) {
-                    for(let i = 0; i < tags.length; i++) {
-                      const [result2, created] = await Tag.findOrCreate({
-                        where: { tagName: tags[i] },
-                        defaults: { tagName: tags[i] }
-                      });
-                      await UserTag.findOrCreate({
-                        where: { userId: result.id, tagId: result2.id },
-                        defaults: { userId: result.id, tagId: result2.id }
-                      });
-                    }
-                  }
-                  const userData = await User.findOne({ 
-                    attributes: { exclude: ["password"] },
-                    where: { id: result.id } 
-                  });
-                  res.status(200).json({ data: userData, message: "ok" });
-                });
-              } else {
-                await User.update(
-                  { nickname, aboutMe, location },
-                  { where: { id : result.id } }
-                );
-                const userData = await User.findOne({ 
-                  attributes: { exclude: ["password"] },
-                  where: { id: result.id } 
-                });
-                res.status(200).json({ data: userData, message: "ok" })
-              }
-            }
-          } else {
-            if(req.file !== undefined) {
-              const s3 = new AWS.S3({
-                accessKeyId: process.env.AWS_ACCESS_KEY,
-                secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
-              });
-              const param = {
-                Bucket: "whynotworking",
-                Key:
-                  "image/" + result.nickname + "profile" + new Date().getTime() + ".jpg",
-                ACL: "public-read",
-                Body: req.file.buffer
-              };
-              s3.upload(param, async function (err:any, data:any) {
-                await User.update(
-                  { image: data.Location, aboutMe, location },
-                  { where: { id : result.id } }
-                );
-                if(tags) {
-                  for(let i = 0; i < tags.length; i++) {
-                    const [result2, created] = await Tag.findOrCreate({
-                      where: { tagName: tags[i] },
-                      defaults: { tagName: tags[i] }
-                    });
-                    await UserTag.findOrCreate({
-                      where: { userId: result.id, tagId: result2.id },
-                      defaults: { userId: result.id, tagId: result2.id }
-                    });
-                  }
-                }
-                const userData = await User.findOne({ 
-                  attributes: { exclude: ["password"] },
-                  where: { id: result.id } 
-                });
-                res.status(200).json({ data: userData, message: "ok" });
-              });
-            } else {
+          }
+        } else {
+          if(req.file !== undefined) {
+            const s3 = new AWS.S3({
+              accessKeyId: process.env.AWS_ACCESS_KEY,
+              secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+            });
+            const param = {
+              Bucket: "whynotworking",
+              Key:
+                "image/" + result.nickname + "profile" + new Date().getTime() + ".jpg",
+              ACL: "public-read",
+              Body: req.file.buffer
+            };
+            s3.upload(param, async function (err:any, data:any) {
               await User.update(
-                { aboutMe, location },
-                { where: { id : result.id } }
+                { password, image: data.Location, aboutMe, location },
+                { where: { id: result.id } }
               );
+              if(tags) {
+                for(let i = 0; i < tags.length; i++) {
+                  const [result2, created] = await Tag.findOrCreate({
+                    where: { tagName: tags[i] },
+                    defaults: { tagName: tags[i] }
+                  });
+                  await UserTag.findOrCreate({
+                    where: { userId: result.id, tagId: result2.id },
+                    defaults: { userId: result.id, tagId: result2.id }
+                  });
+                }
+              }
               const userData = await User.findOne({ 
                 attributes: { exclude: ["password"] },
                 where: { id: result.id } 
               });
-              res.status(200).json({ data: userData, message: "ok" })
-            }
+              res.status(200).json({ data: userData, message: "ok" });
+            });
+          } else {
+            await User.update(
+              { password, aboutMe, location },
+              { where: { id: result.id } }
+            );
+            const userData = await User.findOne({ 
+              attributes: { exclude: ["password"] },
+              where: { id: result.id } 
+            });
+            res.status(200).json({ data: userData, message: "ok" });
           }
-        }
-      });
-    } catch (err) {
-      console.log(err.message);
-    }
+        } 
+      })
+  } catch(err) {
+    console.log(err.message);
+  }
   }
 }
