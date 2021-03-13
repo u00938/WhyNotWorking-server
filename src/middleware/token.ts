@@ -37,7 +37,6 @@ interface UserPayload {
 export const tokenChecker = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const token = req.cookies.accessToken;
-    const githubToken = req.cookies.githubOauthToken;
     if (token) {
       const payload = await jwt.verify(token, process.env.ACCESS_SECRET!) as UserPayload
       delete payload.iat;

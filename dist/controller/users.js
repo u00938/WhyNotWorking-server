@@ -63,39 +63,18 @@ exports.controller = {
     getMyInfo: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const authorization = req.headers['authorization'];
-            const tokenType = authorization.split(' ')[1];
-            const token = authorization.split(' ')[2];
-            if (tokenType === "jwt" || tokenType === "github") {
-                jsonwebtoken_1.default.verify(token, process.env.ACCESS_SECRET, (error, result) => __awaiter(void 0, void 0, void 0, function* () {
-                    const data = yield User_1.User.findOne({
-                        attributes: { exclude: ["password"] },
-                        include: [{
-                                model: Tag_1.Tag,
-                                through: { attributes: [] }
-                            }],
-                        where: { id: result.id }
-                    });
-                    res.status(200).json({ data: data, message: "ok" });
-                }));
-            }
-            else if (tokenType === "google") {
-                const ticket = yield client.verifyIdToken({
-                    idToken: token,
-                    audience: process.env.GOOGLE_CLIENT_ID
-                });
-                const payload = ticket.getPayload();
-                const myInfo = yield User_1.User.findOne({
-                    where: { nickname: payload.name },
+            const token = authorization.split(' ')[1];
+            jsonwebtoken_1.default.verify(token, process.env.ACCESS_SECRET, (error, result) => __awaiter(void 0, void 0, void 0, function* () {
+                const data = yield User_1.User.findOne({
                     attributes: { exclude: ["password"] },
                     include: [{
                             model: Tag_1.Tag,
                             through: { attributes: [] }
-                        }]
+                        }],
+                    where: { id: result.id }
                 });
-                if (myInfo) {
-                    res.status(200).json({ data: myInfo, message: "ok" });
-                }
-            }
+                res.status(200).json({ data: data, message: "ok" });
+            }));
             // else if(req.cookies.facebookOauthToken) {
             //   console.log(req.cookies.facebookOauthToken);
             //   const token: any = req.cookies.facebookOauthToken;

@@ -53,7 +53,7 @@ export const controller = {
               overwrite: true,
             } as Options
             res.cookie("accessToken", token, options)
-            res.status(200).json({ data: null, accessToken: `Bearer jwt ${token}` , message: "ok" })
+            res.status(200).json({ data: null, accessToken: `Bearer ${token}` , message: "ok" })
           }
           );
       }
@@ -82,26 +82,39 @@ export const controller = {
           where: { email, nickname },
           defaults: { nickname, email, image },
         });
-        interface Options {
-          // domain?: string,
-          path: string;
-          httpOnly: boolean;
-          secure: boolean;
-          sameSite: string;
-          maxAge: number;
-          overwrite: boolean;
+        const payload = {
+          id: result.id,
+          email: result.email,
+          nickname: result.nickname
         }
-        const options: any = {
-          // domain: "localhost",
-          path: "/",
-          httpOnly: true,
-          secure: process.env.COOKIE_SECURE || false,
-          sameSite: process.env.COOKIE_SAMESITE || "Lax",
-          maxAge: 1000 * 60 * 60 * 24,
-          overwrite: true,
-        } as Options
-        res.cookie("googleOauthToken", token, options);
-        res.status(200).json({ data: result, accessToken: `Bearer google ${token}`, message: "ok" });
+        jwt.sign(
+          payload, 
+          process.env.ACCESS_SECRET!, 
+          { expiresIn: "1d" }
+          , (err, token) => {
+            if (err) res.status(404).json({ data: null, message: err.message })
+            interface Options {
+              // domain?: string,
+              path: string;
+              httpOnly: boolean;
+              secure: boolean;
+              sameSite: string;
+              maxAge: number;
+              overwrite: boolean;
+            }
+            const options: any = {
+              // domain: "localhost",
+              path: "/",
+              httpOnly: true,
+              secure: process.env.COOKIE_SECURE || false,
+              sameSite: process.env.COOKIE_SAMESITE || "Lax",
+              maxAge: 1000 * 60 * 60 * 24,
+              overwrite: true,
+            } as Options
+            res.cookie("accessToken", token, options)
+            res.status(200).json({ data: result, accessToken: `Bearer ${token}` , message: "ok" })
+          }
+          );
       })
       .catch(console.error);
   },
@@ -115,16 +128,6 @@ export const controller = {
         await axios.post(url, { client_id, client_secret, code }, { headers: { accept: "application/json" } })
         .then((result) => {
           const token = result.data.access_token;
-          const options: any = {
-            // domain: "localhost",
-            path: "/",
-            httpOnly: true,
-            secure: process.env.COOKIE_SECURE || false,
-            sameSite: process.env.COOKIE_SAMESITE || "Lax",
-            maxAge: 1000 * 60 * 60 * 24,
-            overwrite: true,
-          } 
-          res.cookie("githubOauthToken", token, options);
           res.status(200).json({ data: null, accessToken: token, message: "ok" })
         })
       } else {
@@ -161,7 +164,7 @@ export const controller = {
           overwrite: true,
         } 
         res.cookie("accessToken", token, options)
-        res.status(200).json({ data: null, accessToken: `Bearer github ${token}`, message: "ok" })
+        res.status(200).json({ data: null, accessToken: `Bearer ${token}`, message: "ok" })
       });
   }
   // facebookLogin: async (req: Request, res: Response) => {

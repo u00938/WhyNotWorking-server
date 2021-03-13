@@ -37,26 +37,6 @@ exports.controller = {
                     }
                 });
             }
-            else if (req.cookies.googleOauthToken) {
-                const ticket = yield client.verifyIdToken({
-                    idToken: req.cookies.googleOauthToken,
-                    audience: process.env.GOOGLE_CLIENT_ID
-                });
-                const payload = ticket.getPayload();
-                if (payload) {
-                    const options = {
-                        //domain: "localhost",
-                        path: "/",
-                        httpOnly: true,
-                        secure: process.env.COOKIE_SECURE || false,
-                        sameSite: process.env.COOKIE_SAMESITE || "Lax",
-                        maxAge: 1000 * 60 * 60 * 24,
-                        overwrite: true,
-                    };
-                    res.clearCookie('googleOauthToken', options);
-                    res.status(200).json({ data: null, message: 'ok' });
-                }
-            }
             else {
                 res.status(400).json({ data: null, message: 'Please login first' });
             }
