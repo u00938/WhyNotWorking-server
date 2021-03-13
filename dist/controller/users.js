@@ -68,7 +68,7 @@ exports.controller = {
             if (tokenType === "jwt") {
                 jsonwebtoken_1.default.verify(token, process.env.ACCESS_SECRET, (error, result) => __awaiter(void 0, void 0, void 0, function* () {
                     const data = yield User_1.User.findOne({
-                        attributes: ["id", "nickname", "email", "image", "aboutMe", "location"],
+                        attributes: { exclude: ["password"] },
                         include: [{
                                 model: Tag_1.Tag,
                                 through: { attributes: [] }
