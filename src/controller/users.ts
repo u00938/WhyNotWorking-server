@@ -55,7 +55,7 @@ export const controller = {
       if (tokenType === "jwt") {
         jwt.verify(token, process.env.ACCESS_SECRET!, async (error: any, result: any) => {
           const data = await User.findOne({ 
-            attributes: ["id", "nickname", "email", "image", "aboutMe", "location"],
+            attributes: { exclude: ["password"] },
             include: [{
               model: Tag,
               through: { attributes: [] }
