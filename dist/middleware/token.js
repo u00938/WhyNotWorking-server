@@ -45,9 +45,6 @@ const tokenChecker = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
             res.cookie("accessToken", newToken, options);
             next();
         }
-        else if (githubToken) {
-            next();
-        }
         else {
             res.status(400).json({ message: "auth error" });
         }

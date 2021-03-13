@@ -98,7 +98,7 @@ exports.controller = {
         }))
             .catch(console.error);
     },
-    githubLogin: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    githubToken: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const client_id = process.env.GITHUB_CLIENT_ID;
             const client_secret = process.env.GITHUB_CLIENT_SECRET;
@@ -118,7 +118,7 @@ exports.controller = {
                         overwrite: true,
                     };
                     res.cookie("githubOauthToken", token, options);
-                    res.status(200).json({ data: null, accessToken: `Bearer github ${token}`, message: "ok" });
+                    res.status(200).json({ data: null, accessToken: token, message: "ok" });
                 });
             }
             else {
@@ -129,13 +129,32 @@ exports.controller = {
             console.log(err.message);
         }
     }),
-    githubSign: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    githubLogin: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { email, nickname, location, image } = req.body;
-        yield User_1.User.findOrCreate({
-            where: { email },
-            defaults: { email, nickname, location, image },
+        const [result] = yield User_1.User.findOrCreate({
+            where: { email: nickname + '@github.com' },
+            defaults: { email: nickname + '@github.com', nickname: email, location, image },
         });
-        res.status(200).json({ data: null, message: "ok" });
+        const payload = {
+            id: result.id,
+            email: result.email,
+            nickname: result.nickname
+        };
+        jsonwebtoken_1.default.sign(payload, process.env.ACCESS_SECRET, { expiresIn: "1d" }, (err, token) => {
+            if (err)
+                res.status(404).json({ data: null, message: err.message });
+            const options = {
+                // domain: "localhost",
+                path: "/",
+                httpOnly: true,
+                secure: process.env.COOKIE_SECURE || false,
+                sameSite: process.env.COOKIE_SAMESITE || "Lax",
+                maxAge: 1000 * 60 * 60 * 24,
+                overwrite: true,
+            };
+            res.cookie("accessToken", token, options);
+            res.status(200).json({ data: null, accessToken: `Bearer github ${token}`, message: "ok" });
+        });
     })
     // facebookLogin: async (req: Request, res: Response) => {
     //   try {
