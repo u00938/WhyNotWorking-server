@@ -12,6 +12,8 @@ export interface PostI {
   body: string
   votes: number
   views: number
+  voteUpUser: string
+  voteDownUser: string
 }
 
 @Table({
@@ -53,6 +55,14 @@ export class Post extends Model implements PostI {
   @NotEmpty
   @Column
   views!: number
+
+  @Default("")
+  @Column
+  voteUpUser!: string
+
+  @Default("")
+  @Column
+  voteDownUser!: string
 
   @HasOne(() => Post, { constraints: false })
   post!: Post[]

@@ -19,6 +19,7 @@ const Tag_1 = require("../models/Tag");
 const PostTag_1 = require("../models/PostTag");
 const Answer_1 = require("../models/Answer");
 const User_1 = require("../models/User");
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 exports.controller = {
     get: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
@@ -125,15 +126,17 @@ exports.controller = {
             const { userId, title, body, tags } = req.body;
             if (userId && title && body) {
                 const postData = yield Post_1.Post.create({ userId, title, body });
-                for (let i = 0; i < tags.length; i++) {
-                    const [result, created] = yield Tag_1.Tag.findOrCreate({
-                        where: { tagName: tags[i] },
-                        defaults: { tagName: tags[i] }
-                    });
-                    yield PostTag_1.PostTag.findOrCreate({
-                        where: { postId: postData.id, tagId: result.id },
-                        defaults: { postId: postData.id, tagId: result.id }
-                    });
+                if (tags) {
+                    for (let i = 0; i < tags.length; i++) {
+                        const [result, created] = yield Tag_1.Tag.findOrCreate({
+                            where: { tagName: tags[i] },
+                            defaults: { tagName: tags[i] }
+                        });
+                        yield PostTag_1.PostTag.findOrCreate({
+                            where: { postId: postData.id, tagId: result.id },
+                            defaults: { postId: postData.id, tagId: result.id }
+                        });
+                    }
                 }
                 res.status(200).json({ data: postData.id, message: "ok" });
             }
@@ -206,10 +209,34 @@ exports.controller = {
         try {
             const { id } = req.query;
             if (id) {
-                const findPost = yield Post_1.Post.findOne({ where: { id } });
-                const postVotes = findPost.votes;
-                yield Post_1.Post.update({ votes: postVotes + 1 }, { where: { id } });
-                res.status(200).json({ data: null, message: "ok" });
+                const authorization = req.headers['authorization'];
+                const token = authorization.split(' ')[1];
+                jsonwebtoken_1.default.verify(token, process.env.ACCESS_SECRET, (error, result) => __awaiter(void 0, void 0, void 0, function* () {
+                    const findPost = yield Post_1.Post.findOne({ where: { id } });
+                    let voteUpUser = findPost.voteUpUser;
+                    let voteUpArr = voteUpUser.split(" ");
+                    let upIndex = voteUpArr.indexOf(result.id.toString());
+                    let voteDownUser = findPost.voteDownUser;
+                    let voteDownArr = voteDownUser.split(" ");
+                    let downIndex = voteDownArr.indexOf(result.id.toString());
+                    if (downIndex !== -1 && upIndex === -1) {
+                        voteDownArr.splice(downIndex, 1);
+                        voteDownUser = voteDownArr.join(" ");
+                        const postVotes = findPost.votes;
+                        yield Post_1.Post.update({ voteDownUser, votes: postVotes + 1 }, { where: { id } });
+                        res.status(200).json({ data: null, message: "ok" });
+                    }
+                    else if (downIndex === -1 && upIndex === -1) {
+                        voteUpArr.push(result.id.toString());
+                        voteUpUser = voteUpArr.join(" ");
+                        const postVotes = findPost.votes;
+                        yield Post_1.Post.update({ voteUpUser, votes: postVotes + 1 }, { where: { id } });
+                        res.status(200).json({ data: null, message: "ok" });
+                    }
+                    else {
+                        res.status(400).json({ data: null, message: "You have already voted" });
+                    }
+                }));
             }
             else {
                 res.status(400).json({ data: null, message: "should send id" });
@@ -223,10 +250,34 @@ exports.controller = {
         try {
             const { id } = req.query;
             if (id) {
-                const findPost = yield Post_1.Post.findOne({ where: { id } });
-                const postVotes = findPost.votes;
-                yield Post_1.Post.update({ votes: postVotes - 1 }, { where: { id } });
-                res.status(200).json({ data: null, message: "ok" });
+                const authorization = req.headers['authorization'];
+                const token = authorization.split(' ')[1];
+                jsonwebtoken_1.default.verify(token, process.env.ACCESS_SECRET, (error, result) => __awaiter(void 0, void 0, void 0, function* () {
+                    const findPost = yield Post_1.Post.findOne({ where: { id } });
+                    let voteUpUser = findPost.voteUpUser;
+                    let voteUpArr = voteUpUser.split(" ");
+                    let upIndex = voteUpArr.indexOf(result.id.toString());
+                    let voteDownUser = findPost.voteDownUser;
+                    let voteDownArr = voteDownUser.split(" ");
+                    let downIndex = voteDownArr.indexOf(result.id.toString());
+                    if (upIndex !== -1 && downIndex === -1) {
+                        voteUpArr.splice(downIndex, 1);
+                        voteUpUser = voteUpArr.join(" ");
+                        const postVotes = findPost.votes;
+                        yield Post_1.Post.update({ voteUpUser, votes: postVotes - 1 }, { where: { id } });
+                        res.status(200).json({ data: null, message: "ok" });
+                    }
+                    else if (upIndex === -1 && downIndex === -1) {
+                        voteDownArr.push(result.id.toString());
+                        voteDownUser = voteDownArr.join(" ");
+                        const postVotes = findPost.votes;
+                        yield Post_1.Post.update({ voteDownUser, votes: postVotes - 1 }, { where: { id } });
+                        res.status(200).json({ data: null, message: "ok" });
+                    }
+                    else {
+                        res.status(400).json({ data: null, message: "You have already voted" });
+                    }
+                }));
             }
             else {
                 res.status(400).json({ data: null, message: "should send id" });

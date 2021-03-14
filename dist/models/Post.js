@@ -59,6 +59,16 @@ __decorate([
     __metadata("design:type", Number)
 ], Post.prototype, "views", void 0);
 __decorate([
+    sequelize_typescript_1.Default(""),
+    sequelize_typescript_1.Column,
+    __metadata("design:type", String)
+], Post.prototype, "voteUpUser", void 0);
+__decorate([
+    sequelize_typescript_1.Default(""),
+    sequelize_typescript_1.Column,
+    __metadata("design:type", String)
+], Post.prototype, "voteDownUser", void 0);
+__decorate([
     sequelize_typescript_1.HasOne(() => Post_1, { constraints: false }),
     __metadata("design:type", Array)
 ], Post.prototype, "post", void 0);
