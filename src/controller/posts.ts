@@ -19,7 +19,7 @@ export const controller = {
         }
         const postByPage = await Post.findAll({
           include: [
-            { model: User, attributes: ["nickname", "image"] },
+            { model: User, attributes: ["id", "nickname", "image"] },
             { model: PostTag, attributes: ["tagId"], 
               include: [{
                 model: Tag,
@@ -29,7 +29,7 @@ export const controller = {
             { model: Answer, 
               include: [{ 
                 model: User, 
-                attributes: ["nickname", "image"] 
+                attributes: ["id", "nickname", "image"] 
               }] 
             },
           ],
@@ -42,7 +42,7 @@ export const controller = {
       if (query.user_id) {
         const postByUser = await Post.findAll({
           include: [
-            { model: User, attributes: ["nickname", "image"] },
+            { model: User, attributes: ["id", "nickname", "image"] },
             { model: PostTag, attributes: ["tagId"], 
               include: [{
                 model: Tag,
@@ -52,7 +52,7 @@ export const controller = {
             { model: Answer, 
               include: [{ 
                 model: User, 
-                attributes: ["nickname", "image"] 
+                attributes: ["id", "nickname", "image"] 
               }] 
             },
           ],
@@ -63,7 +63,7 @@ export const controller = {
       if (query.post_id) {
         const postById = await Post.findAll({
           include: [
-            { model: User, attributes: ["nickname", "image"] },
+            { model: User, attributes: ["id", "nickname", "image"] },
             { model: PostTag, attributes: ["tagId"], 
               include: [{
                 model: Tag,
@@ -73,7 +73,7 @@ export const controller = {
             { model: Answer, 
               include: [{ 
                 model: User, 
-                attributes: ["nickname", "image"] 
+                attributes: ["id", "nickname", "image"] 
               }] 
             },
           ],
