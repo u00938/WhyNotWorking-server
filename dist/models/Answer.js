@@ -13,6 +13,7 @@ exports.Answer = void 0;
 const sequelize_typescript_1 = require("sequelize-typescript");
 const User_1 = require("./User");
 const Post_1 = require("./Post");
+const Choose_1 = require("./Choose");
 let Answer = class Answer extends sequelize_typescript_1.Model {
 };
 __decorate([
@@ -71,6 +72,10 @@ __decorate([
     sequelize_typescript_1.BelongsTo(() => Post_1.Post),
     __metadata("design:type", Post_1.Post)
 ], Answer.prototype, "post", void 0);
+__decorate([
+    sequelize_typescript_1.HasOne(() => Choose_1.Choose),
+    __metadata("design:type", Array)
+], Answer.prototype, "chooseTable", void 0);
 Answer = __decorate([
     sequelize_typescript_1.Table({
         tableName: "answers",

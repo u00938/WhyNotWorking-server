@@ -16,6 +16,7 @@ const User_1 = require("./User");
 const Tag_1 = require("./Tag");
 const PostTag_1 = require("./PostTag");
 const Answer_1 = require("./Answer");
+const Choose_1 = require("../models/Choose");
 let Post = Post_1 = class Post extends sequelize_typescript_1.Model {
 };
 __decorate([
@@ -88,6 +89,10 @@ __decorate([
     sequelize_typescript_1.BelongsToMany(() => Tag_1.Tag, () => PostTag_1.PostTag),
     __metadata("design:type", Array)
 ], Post.prototype, "tag", void 0);
+__decorate([
+    sequelize_typescript_1.HasOne(() => Choose_1.Choose),
+    __metadata("design:type", Array)
+], Post.prototype, "chooseTable", void 0);
 Post = Post_1 = __decorate([
     sequelize_typescript_1.Table({
         tableName: "posts",
