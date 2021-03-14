@@ -32,7 +32,7 @@ exports.controller = {
                 }
                 const postByPage = yield Post_1.Post.findAll({
                     include: [
-                        { model: User_1.User, attributes: ["nickname", "image"] },
+                        { model: User_1.User, attributes: ["id", "nickname", "image"] },
                         { model: PostTag_1.PostTag, attributes: ["tagId"],
                             include: [{
                                     model: Tag_1.Tag,
@@ -42,7 +42,7 @@ exports.controller = {
                         { model: Answer_1.Answer,
                             include: [{
                                     model: User_1.User,
-                                    attributes: ["nickname", "image"]
+                                    attributes: ["id", "nickname", "image"]
                                 }]
                         },
                     ],
@@ -55,7 +55,7 @@ exports.controller = {
             if (query.user_id) {
                 const postByUser = yield Post_1.Post.findAll({
                     include: [
-                        { model: User_1.User, attributes: ["nickname", "image"] },
+                        { model: User_1.User, attributes: ["id", "nickname", "image"] },
                         { model: PostTag_1.PostTag, attributes: ["tagId"],
                             include: [{
                                     model: Tag_1.Tag,
@@ -65,7 +65,7 @@ exports.controller = {
                         { model: Answer_1.Answer,
                             include: [{
                                     model: User_1.User,
-                                    attributes: ["nickname", "image"]
+                                    attributes: ["id", "nickname", "image"]
                                 }]
                         },
                     ],
@@ -76,7 +76,7 @@ exports.controller = {
             if (query.post_id) {
                 const postById = yield Post_1.Post.findAll({
                     include: [
-                        { model: User_1.User, attributes: ["nickname", "image"] },
+                        { model: User_1.User, attributes: ["id", "nickname", "image"] },
                         { model: PostTag_1.PostTag, attributes: ["tagId"],
                             include: [{
                                     model: Tag_1.Tag,
@@ -86,7 +86,7 @@ exports.controller = {
                         { model: Answer_1.Answer,
                             include: [{
                                     model: User_1.User,
-                                    attributes: ["nickname", "image"]
+                                    attributes: ["id", "nickname", "image"]
                                 }]
                         },
                     ],
