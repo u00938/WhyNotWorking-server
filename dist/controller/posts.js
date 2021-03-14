@@ -209,8 +209,7 @@ exports.controller = {
         try {
             const { id } = req.query;
             if (id) {
-                const authorization = req.headers['authorization'];
-                const token = authorization.split(' ')[1];
+                const token = req.cookies.accessToken;
                 jsonwebtoken_1.default.verify(token, process.env.ACCESS_SECRET, (error, result) => __awaiter(void 0, void 0, void 0, function* () {
                     const findPost = yield Post_1.Post.findOne({ where: { id } });
                     let voteUpUser = findPost.voteUpUser;
@@ -250,8 +249,7 @@ exports.controller = {
         try {
             const { id } = req.query;
             if (id) {
-                const authorization = req.headers['authorization'];
-                const token = authorization.split(' ')[1];
+                const token = req.cookies.accessToken;
                 jsonwebtoken_1.default.verify(token, process.env.ACCESS_SECRET, (error, result) => __awaiter(void 0, void 0, void 0, function* () {
                     const findPost = yield Post_1.Post.findOne({ where: { id } });
                     let voteUpUser = findPost.voteUpUser;

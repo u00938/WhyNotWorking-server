@@ -185,8 +185,7 @@ export const controller = {
     try {
       const { id } = req.query;
       if (id) {
-        const authorization:any = req.headers['authorization'];
-        const token = authorization.split(' ')[1];
+        const token = req.cookies.accessToken;
           jwt.verify(token, process.env.ACCESS_SECRET!, async (error: any, result: any) => {
             const findPost = await Post.findOne({ where: { id } });
             let voteUpUser = findPost!.voteUpUser;
@@ -222,8 +221,7 @@ export const controller = {
     try {
       const { id } = req.query;
       if (id) {
-        const authorization:any = req.headers['authorization'];
-        const token = authorization.split(' ')[1];
+        const token = req.cookies.accessToken;
           jwt.verify(token, process.env.ACCESS_SECRET!, async (error: any, result: any) => {
             const findPost = await Post.findOne({ where: { id } });
             let voteUpUser = findPost!.voteUpUser;
