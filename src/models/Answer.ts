@@ -10,6 +10,8 @@ export interface AnswerI {
   body: string
   votes: number
   choose: boolean
+  voteUpUser: string
+  voteDownUser: string
 }
 
 @Table({
@@ -49,6 +51,14 @@ export class Answer extends Model implements AnswerI {
   @AllowNull(true)
   @Column
   choose!: boolean
+
+  @Default("")
+  @Column
+  voteUpUser!: string
+
+  @Default("")
+  @Column
+  voteDownUser!: string
 
   @BelongsTo(() => User) 
   user!: User;

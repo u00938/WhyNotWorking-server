@@ -54,6 +54,16 @@ __decorate([
     __metadata("design:type", Boolean)
 ], Answer.prototype, "choose", void 0);
 __decorate([
+    sequelize_typescript_1.Default(""),
+    sequelize_typescript_1.Column,
+    __metadata("design:type", String)
+], Answer.prototype, "voteUpUser", void 0);
+__decorate([
+    sequelize_typescript_1.Default(""),
+    sequelize_typescript_1.Column,
+    __metadata("design:type", String)
+], Answer.prototype, "voteDownUser", void 0);
+__decorate([
     sequelize_typescript_1.BelongsTo(() => User_1.User),
     __metadata("design:type", User_1.User)
 ], Answer.prototype, "user", void 0);
