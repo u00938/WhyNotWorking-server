@@ -30,6 +30,7 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "nickname", void 0);
 __decorate([
+    sequelize_typescript_1.Unique,
     sequelize_typescript_1.AllowNull(false),
     sequelize_typescript_1.NotEmpty,
     sequelize_typescript_1.Column,
