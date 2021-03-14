@@ -131,8 +131,8 @@ exports.controller = {
     githubLogin: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { email, nickname, location, image } = req.body;
         const [result] = yield User_1.User.findOrCreate({
-            where: { email: nickname + '@github.com' },
-            defaults: { email: nickname + '@github.com', nickname: email, location, image },
+            where: { email: email + '@github.com' },
+            defaults: { email: email + '@github.com', nickname: email, location, image },
         });
         const payload = {
             id: result.id,

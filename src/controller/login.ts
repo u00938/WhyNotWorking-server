@@ -140,8 +140,8 @@ export const controller = {
   githubLogin: async (req: Request, res: Response) => {
     const { email, nickname, location, image } = req.body;
     const [result] = await User.findOrCreate({
-      where: { email: nickname + '@github.com' },
-      defaults: { email: nickname + '@github.com', nickname: email, location, image },
+      where: { email: email + '@github.com' },
+      defaults: { email: email + '@github.com', nickname: email, location, image },
     });
     const payload = {
       id: result.id,
