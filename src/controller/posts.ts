@@ -32,6 +32,7 @@ export const controller = {
               }] 
             },
           ],
+          order: [["id", "DESC"]],
           offset,
           limit: 15
         })
