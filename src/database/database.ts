@@ -17,6 +17,7 @@ import { Tag } from "../models/Tag";
 import { PostTag } from "../models/PostTag";
 import { UserTag } from "../models/UserTag";
 import { Answer } from "../models/Answer";
+import { Choose } from "../models/Choose";
 
 export const sequelize: Sequelize = new Sequelize({
   port: (process.env.DB_PORT as unknown) as number,
@@ -25,5 +26,5 @@ export const sequelize: Sequelize = new Sequelize({
   password: process.env.PASSWORD,
   database: process.env.DATABASE,
   dialect: "mysql",
-  models: [User, Post, Tag, PostTag, UserTag, Answer]
+  models: [User, Post, Tag, PostTag, UserTag, Answer, Choose]
 })

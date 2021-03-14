@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.controller = void 0;
 const Answer_1 = require("../models/Answer");
 const Post_1 = require("../models/Post");
+const Choose_1 = require("../models/Choose");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 exports.controller = {
     get: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -96,9 +97,23 @@ exports.controller = {
             const { id } = req.query;
             if (id) {
                 const findAnswer = yield Answer_1.Answer.findOne({ where: { id } });
-                const isChoose = findAnswer.choose;
-                yield Answer_1.Answer.update({ choose: !isChoose }, { where: { id } });
-                res.status(200).json({ data: null, message: "ok" });
+                const postId = findAnswer.postId;
+                const isChoose = yield Choose_1.Choose.findOne({ where: { postId } });
+                if (isChoose) {
+                    if (isChoose.answerId.toString() === id) {
+                        yield Answer_1.Answer.update({ choose: false }, { where: { id } });
+                        yield Choose_1.Choose.destroy({ where: { postId } });
+                        res.status(200).json({ data: null, message: "ok" });
+                    }
+                    else {
+                        res.status(400).json({ data: null, message: "already closed post" });
+                    }
+                }
+                else {
+                    yield Answer_1.Answer.update({ choose: true }, { where: { id } });
+                    yield Choose_1.Choose.create({ postId, answerId: id });
+                    res.status(200).json({ data: null, message: "ok" });
+                }
             }
             else {
                 res.status(400).json({ data: null, message: "should send full data" });

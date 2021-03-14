@@ -23,13 +23,13 @@ const Tag_1 = require("../models/Tag");
 const PostTag_1 = require("../models/PostTag");
 const UserTag_1 = require("../models/UserTag");
 const Answer_1 = require("../models/Answer");
+const Choose_1 = require("../models/Choose");
 exports.sequelize = new sequelize_typescript_1.Sequelize({
-    port: process.env.DB_PORT,
-    host: process.env.DB_HOST,
-    username: process.env.USERNAME,
-    password: process.env.PASSWORD,
-    database: process.env.DATABASE,
+    host: "localhost",
+    username: "databaseuser",
+    password: "young4262",
+    database: "whynotworking",
     dialect: "mysql",
-    models: [User_1.User, Post_1.Post, Tag_1.Tag, PostTag_1.PostTag, UserTag_1.UserTag, Answer_1.Answer]
+    models: [User_1.User, Post_1.Post, Tag_1.Tag, PostTag_1.PostTag, UserTag_1.UserTag, Answer_1.Answer, Choose_1.Choose]
 });
 //# sourceMappingURL=database.js.map

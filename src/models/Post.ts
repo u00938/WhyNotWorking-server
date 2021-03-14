@@ -4,6 +4,7 @@ import { User } from "./User";
 import { Tag } from "./Tag";
 import { PostTag } from "./PostTag";
 import { Answer } from "./Answer";
+import { Choose } from "../models/Choose";
 
 export interface PostI {
   id?: number
@@ -79,4 +80,6 @@ export class Post extends Model implements PostI {
   @BelongsToMany(() => Tag, () => PostTag)
   tag!: Tag[];
 
+  @HasOne(() => Choose)
+  chooseTable!: Choose[]
 }

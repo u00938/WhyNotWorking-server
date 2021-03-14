@@ -1,7 +1,8 @@
-import { AllowNull, AutoIncrement, BelongsTo, Column, DataType, Default, ForeignKey, Model, NotEmpty, PrimaryKey, Table } from "sequelize-typescript"
+import { AllowNull, AutoIncrement, BelongsTo, Column, DataType, Default, ForeignKey, HasOne, Model, NotEmpty, PrimaryKey, Table } from "sequelize-typescript"
 
 import { User } from "./User";
 import { Post } from "./Post";
+import { Choose } from "./Choose";
 
 export interface AnswerI {
   id?: number
@@ -65,4 +66,7 @@ export class Answer extends Model implements AnswerI {
 
   @BelongsTo(() => Post) 
   post!: Post;
+
+  @HasOne(() => Choose)
+  chooseTable!: Choose[]
 }

@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { Answer } from "../models/Answer";
 import { Post } from "../models/Post";
+import { Choose } from "../models/Choose";
 import jwt from "jsonwebtoken";
 
 export const controller = {
@@ -74,10 +75,22 @@ export const controller = {
     try {
       const { id } = req.query;
       if (id) {
-        const findAnswer = await Answer.findOne({ where: { id } });
-        const isChoose = findAnswer!.choose;
-        await Answer.update({ choose: !isChoose }, { where:  { id } });
-        res.status(200).json({ data: null, message: "ok" });
+        const findAnswer = await Answer.findOne({ where: { id } })
+        const postId = findAnswer!.postId
+        const isChoose = await Choose.findOne({ where: { postId } })
+        if (isChoose) {
+          if (isChoose.answerId.toString() === id) {
+            await Answer.update({ choose: false }, { where: { id } })
+            await Choose.destroy({ where: { postId } })
+            res.status(200).json({ data: null, message: "ok" });
+          } else {
+            res.status(400).json({ data: null, message: "already closed post" });
+          }
+        } else {
+          await Answer.update({ choose: true }, { where: { id } })
+          await Choose.create({ postId, answerId: id })
+          res.status(200).json({ data: null, message: "ok" });
+        }
       } else {
         res.status(400).json({ data: null, message: "should send full data" });
       }
