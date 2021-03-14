@@ -2,7 +2,7 @@ import { Router } from "express"
 import { controller } from "../controller/users"
 import { tokenChecker } from "../middleware/token"
 import multer from "multer";
-const upload = multer();
+const upload = multer({ limits: { fileSize: 2048 * 2048 } });
 
 export const users = Router()
 
