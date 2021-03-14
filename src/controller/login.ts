@@ -79,7 +79,7 @@ export const controller = {
       .then(async () => {
         const { nickname, email, image } = userInfo;
         const [result, created] = await User.findOrCreate({
-          where: { email, nickname },
+          where: { email },
           defaults: { nickname, email, image },
         });
         const payload = {

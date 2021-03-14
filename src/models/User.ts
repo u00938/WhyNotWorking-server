@@ -1,4 +1,4 @@
-import { AllowNull, AutoIncrement, BelongsToMany, Column, DataType, HasMany, Model, NotEmpty, PrimaryKey, Table } from "sequelize-typescript"
+import { AllowNull, AutoIncrement, BelongsToMany, Column, DataType, HasMany, Model, NotEmpty, PrimaryKey, Table, Unique } from "sequelize-typescript"
 
 import { Post } from "./Post";
 import { Answer } from "./Answer";
@@ -30,6 +30,7 @@ export class User extends Model implements UserI {
   @Column
   nickname!: string
 
+  @Unique
   @AllowNull(false)
   @NotEmpty
   @Column

@@ -81,7 +81,7 @@ exports.controller = {
             .then(() => __awaiter(void 0, void 0, void 0, function* () {
             const { nickname, email, image } = userInfo;
             const [result, created] = yield User_1.User.findOrCreate({
-                where: { email, nickname },
+                where: { email },
                 defaults: { nickname, email, image },
             });
             const payload = {
