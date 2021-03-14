@@ -45,6 +45,7 @@ exports.controller = {
                                 }]
                         },
                     ],
+                    order: [["id", "DESC"]],
                     offset,
                     limit: 15
                 });
